@@ -11,8 +11,9 @@ This hides the various executable components behind a single tool.
 import sys
 import os
 import imp
+import version
 
-COPYRIGHT="Copyright (c) 2009 Liraz Siri - all rights reserved"
+COPYRIGHT="version v%d.%d (c) 2009 Liraz Siri - all rights reserved" % (version.major, version.minor)
 
 # location of our python modules
 PATH_LIB="pylib"
@@ -21,7 +22,7 @@ PATH_LIB="pylib"
 PATH_LIBEXEC="libexec"
 
 # what commands are available (they must be prefixed with cmd_ in PATH_LIB)
-commands = ['prog']
+commands = ['prog', 'prog2']
 
 def setup_env(path_install):
     if PATH_LIBEXEC:

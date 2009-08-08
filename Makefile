@@ -18,11 +18,10 @@ all: install
 version:
 	@echo `cat version.py|sed 's/.*=//'`|sed 's/ /./'|sed 's/^/current version /'
 
-incversion: version
-	@echo "Incrementing version minor in version.py"
-	@perl -i -pe 's/minor=(\d+)/"minor=" . ($$1 + 1)/ge' version.py
+mkpatch:
+	./mkpatch.sh $(PROGNAME)
 
-incver: incversion
+incver: mkpatch
 
 pycompile:
 	$(PYCC) pylib/*.py *.py
@@ -60,7 +59,7 @@ dist: clean
 	-mkdir -p $(PATH_DIST)
 
 	-cp -a .git .gitignore $(PATH_DIST)
-	-cp -a *.sh *.c *.py Makefile pylib/ libexec* $(PATH_DIST)
+	-cp -a *.sh *.c *.py Makefile pylib/ patches/ libexec* $(PATH_DIST)
 
 	tar jcvf $(PATH_DIST).tar.bz2 $(PATH_DIST)
 	rm -rf $(PATH_DIST)

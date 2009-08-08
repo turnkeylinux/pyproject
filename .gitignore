@@ -1,4 +1,7 @@
 prog
 build
+patches
 *.pyc
 *.pyo
+*.tar.bz2
+

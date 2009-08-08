@@ -11,14 +11,14 @@ VERSION_LAST=`cg tag-ls | awk '{print $1}' | grep '^v' | sort | sed -n '$p'`
 VERSION_NEXT=`echo $VERSION_LAST | \
     perl -n -e '/^v(\d+)\.(\d+)/ && printf "v%d.%d", $1, ($2+1)'`
 
+echo "incrementing version to $VERSION_NEXT"
+
 echo updating version.py
 echo $VERSION_NEXT | \
     perl -n -e '/^v(\d+)\.(\d+)/ && printf "major=%d\nminor=%d\n", $1, $2' > version.py
 
-echo commiting new version
+echo cg commit -m "version update $VERSION_LAST -> $VERSION_NEXT"
 cg commit -m "version update $VERSION_LAST -> $VERSION_NEXT"
-
-echo "incrementing version to $VERSION_NEXT"
 
 PATCH_DIR=patches
 if ! [ -d $PATCH_DIR ]; then

@@ -17,8 +17,8 @@ echo updating version.py
 echo $VERSION_NEXT | \
     perl -n -e '/^v(\d+)\.(\d+)/ && printf "major=%d\nminor=%d\n", $1, $2' > version.py
 
-echo cg commit -m "\"version update $VERSION_LAST -> $VERSION_NEXT\""
-cg commit -m "version update $VERSION_LAST -> $VERSION_NEXT"
+echo cg commit -m \"version update $VERSION_LAST to $VERSION_NEXT\"
+cg commit -m "version update $VERSION_LAST to $VERSION_NEXT"
 
 PATCH_DIR=patches
 if ! [ -d $PATCH_DIR ]; then

@@ -7,7 +7,9 @@ fi
 
 PROGNAME=$1
 
-VERSION_LAST=`cg tag-ls | awk '{print $1}' | grep '^v' | sort | sed -n '$p'`
+PY_SORT_CMD="import fileinput, re;lines =[ line for line in fileinput.input() ]; lines.sort(key=lambda s: map(int, re.match(r'\s*v(\d+)\.(\d+)', s).groups()));print ''.join(lines),"
+
+VERSION_LAST=`cg tag-ls | awk '{print $1}' | grep '^v' | python -c "$PY_SORT_CMD" | sed -n '$p'`
 VERSION_NEXT=`echo $VERSION_LAST | \
     perl -n -e '/^v(\d+)\.(\d+)/ && printf "v%d.%d", $1, ($2+1)'`
 

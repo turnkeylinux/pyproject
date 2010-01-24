@@ -1,11 +1,12 @@
 # standard Python project Makefile
 
-PROGNAME=prog
-INSTALL_PREFIX:=$(shell pwd)/build
-PATH_BIN=$(INSTALL_PREFIX)/bin
+prefix=/usr/local
+
+PROGNAME=project
+PATH_BIN=$(prefix)/bin
 
 # WARNING: PATH_INSTALL is rm-rf'ed in uninstall
-PATH_INSTALL=$(INSTALL_PREFIX)/lib/$(PROGNAME)
+PATH_INSTALL=$(prefix)/lib/$(PROGNAME)
 PATH_INSTALL_LIB=$(PATH_INSTALL)/pylib
 PATH_INSTALL_LIBEXEC=$(PATH_INSTALL)/libexec
 
@@ -13,18 +14,16 @@ PYCC=python -OO /usr/lib/python/py_compile.py
 
 PATH_DIST := $(PROGNAME)-$(shell date +%F)
 
-all: install
+all:
+	@echo To install \(by default prefix=$(prefix)\): 
+	@echo     make install prefix=...
 
 pycompile:
 	$(PYCC) pylib/*.py *.py
 
 execproxy: execproxy.c
-	gcc execproxy.c -DMODULE_PATH=\"$(PATH_INSTALL)/wrapper.pyo\" -o $(PROGNAME)
-	strip $(PROGNAME)
-
-pyexecproxy:
-	./mkexecproxy.py $(PATH_INSTALL)/wrapper.pyo $(PROGNAME)
-	chmod 755 $(PROGNAME)
+	gcc execproxy.c -DMODULE_PATH=\"$(PATH_INSTALL)/wrapper.pyo\" -o _$(PROGNAME)
+	strip _$(PROGNAME)
 
 uninstall:
 	rm -rf $(PATH_INSTALL)
@@ -32,7 +31,7 @@ uninstall:
 
 install: pycompile execproxy
 	@echo
-	@echo \*\* CONFIG: INSTALL_PREFIX = $(INSTALL_PREFIX) \*\*
+	@echo \*\* CONFIG: prefix = $(prefix) \*\*
 	@echo 
 
 	install -d $(PATH_BIN) $(PATH_INSTALL) $(PATH_INSTALL_LIB) $(PATH_INSTALL_LIBEXEC)
@@ -41,10 +40,10 @@ install: pycompile execproxy
 	-install -m 755 libexec/* $(PATH_INSTALL_LIBEXEC)
 
 	install -m 644 version.pyo wrapper.pyo $(PATH_INSTALL)
-	install -m 755 $(PROGNAME) $(PATH_BIN)
+	install -m 755 _$(PROGNAME) $(PATH_BIN)/$(PROGNAME)
 
 clean:
-	rm -f pylib/*.pyc pylib/*.pyo *.pyc *.pyo $(PROGNAME)
+	rm -f pylib/*.pyc pylib/*.pyo *.pyc *.pyo _$(PROGNAME)
 	rm -rf build/
 
 dist: clean

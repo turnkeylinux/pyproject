@@ -13,7 +13,7 @@ import os
 import imp
 import version
 
-COPYRIGHT="version v%d.%d (c) 2009 Liraz Siri - all rights reserved" % (version.major, version.minor)
+COPYRIGHT="version v%d.%d (c) 2009 TurnKey Linux - all rights reserved" % (version.major, version.minor)
 
 # location of our python modules
 PATH_LIB="pylib"

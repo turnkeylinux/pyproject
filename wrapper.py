@@ -29,12 +29,21 @@ def setup_env(path_install):
         path_libexec = os.path.join(path_install, PATH_LIBEXEC)
         os.putenv('PATH', ':'.join([path_libexec, path_orig]))
 
+# this function is designed to work when running in-place source
+# and when running code through a pycompiled installation with execproxy
 def get_av0():
     try:
         cmdline = file("/proc/%d/cmdline" % os.getpid(), "r").read()
-        return cmdline.split("\x00")[0]
-    except:
-        return sys.argv[0]
+        args = cmdline.split("\x00")
+        if re.match(r'python[\d\.]*$', os.path.basename(args[0])):
+            av0 = args[1]
+        else:
+            av0 = args[0]
+                    
+    except IOError:
+        av0 = sys.argv[0]
+
+    return os.path.basename(av0)
 
 def usage(error=None):
     
@@ -93,7 +102,7 @@ def main():
     module_args = imp.find_module(module_name, [ path_pythonlib ])
     module = imp.load_module(module_name, *module_args)
 
-    sys.argv = [ get_av0() ] + args
+    sys.argv = [ command ] + args
     module.main()
 
 if __name__=='__main__':

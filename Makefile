@@ -1,8 +1,8 @@
 # standard Python project Makefile
 
-prefix=/usr/local
-
 PROGNAME=project
+
+prefix=/usr/local
 PATH_BIN=$(prefix)/bin
 
 # WARNING: PATH_INSTALL is rm-rf'ed in uninstall
@@ -29,6 +29,9 @@ uninstall:
 	rm -rf $(PATH_INSTALL)
 	rm -f $(PATH_BIN)/$(PROGNAME)
 
+	# delete links from PATH_BIN
+	for f in $(PROGNAME)-*; do rm -f $(PATH_BIN)/$$f; done
+
 install: pycompile execproxy
 	@echo
 	@echo \*\* CONFIG: prefix = $(prefix) \*\*
@@ -40,7 +43,9 @@ install: pycompile execproxy
 	-install -m 755 libexec/* $(PATH_INSTALL_LIBEXEC)
 
 	install -m 644 version.pyo wrapper.pyo $(PATH_INSTALL)
+
 	install -m 755 _$(PROGNAME) $(PATH_BIN)/$(PROGNAME)
+	cp -P $(PROGNAME)-* $(PATH_BIN)	
 
 clean:
 	rm -f pylib/*.pyc pylib/*.pyo *.pyc *.pyo _$(PROGNAME)

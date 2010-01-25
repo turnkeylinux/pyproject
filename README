@@ -1,0 +1,64 @@
+ABOUT
+-----
+
+Python turnkey toolkit template, with two example commands
+1) printargs # prints list of arguments
+2) prog # prints 'prog' not implemented
+
+FEATURES
+--------
+
+* sourceless installation target
+all python modules byte compiled with -OO (strips program of docstrings)
+
+the sourceless python program is executed through a binary execution proxy
+	allowing MAC rules to be applied to the toolkit
+	prevents python environment manipulation tricks
+		tricks that could be used to exploit privileged python apps
+
+* flexible toolkit execution syntax
+# lists available commands
+project
+
+# runs pylib/cmd_command.py:main()
+project command arg1 arg2 ...
+project-command arg1 arg2 ...
+
+# if only one command available, this will run it
+project arg1 arg2
+
+* wrapper environment setup
+
+automatically sets up pylib into your python path 
+automatically sets up libexec into your PATH
+
+USAGE
+-----
+
+1) remove example dummy commands?
+	pylib/cmd_printargs.py
+	pylib/cmd_prog.py
+
+1) change project name 
+	edit Makefile and replace 'project' PROGNAME into your project's name
+	ln -s wrapper.py <PROGNAME> 
+	ln -s <PROGNAME> <PROGNAME>-<subcmd>
+
+2) add programs to the toolkit as pylib/cmd_<subcmd>.py
+ln -s <progname> <progname>-<subcmd>
+
+Remember, you can run toolkit commands like this:
+
+	pylib/cmd_<subcmd>.py arg1 arg2 ...
+	<progname>-<subcmd> arg1 arg2 ...
+	<progname> <subcmd> arg1 arg2 ...
+
+3) install
+
+make install prefix=...  # prefix defaults to /usr/local
+
+4) uninstall
+
+make uninstall		# prefix defaults to /usr/local
+
+5) if you want to increment the version printed, edit version.py

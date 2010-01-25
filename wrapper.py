@@ -9,6 +9,7 @@ What it does is:
 This hides the various executable components behind a single tool.
 """
 
+import re
 import sys
 import os
 import imp
@@ -21,9 +22,6 @@ PATH_LIB="pylib"
 
 # location of our executables (relative to the install path)
 PATH_LIBEXEC="libexec"
-
-# what commands are available (they must be prefixed with cmd_ in PATH_LIB)
-commands = ['prog', 'prog2']
 
 def setup_env(path_install):
     if PATH_LIBEXEC:
@@ -39,6 +37,7 @@ def get_av0():
         return sys.argv[0]
 
 def usage(error=None):
+    
     print >> sys.stderr, COPYRIGHT
     if error:
         print >> sys.stderr, "error: " + error
@@ -48,23 +47,44 @@ Commands:""" % os.path.basename(get_av0())
         print >> sys.stderr, "    %s" % command
     sys.exit(1)
     
+def get_main_commands(path):
+    k = {}
+    for file in os.listdir(path):
+        m = re.match(r'^cmd_(.*)\.py[co]?$', file)
+        if not m:
+            continue
+        k[m.group(1)] = True
+    commands = k.keys()
+
+    return commands
+
 def main():
     path_install = os.path.dirname(__file__)
-
     path_pythonlib = os.path.join(path_install, PATH_LIB)
+
+    global commands
+    commands = get_main_commands(path_pythonlib)
+
     sys.path.insert(0, path_pythonlib)
-    
     setup_env(path_install)
 
     if len(commands) > 1:
-        if len(sys.argv) < 2 or sys.argv[1] == "--help":
-            usage()
+        av0 = get_av0()
 
-        command = sys.argv[1]
+        # project-command? (symbolic link)
+        try:
+            command = av0[av0.index('-') + 1:]
+            args = sys.argv[1:]
+        except ValueError:
+            if len(sys.argv) < 2 or sys.argv[1] == "--help":
+                usage()
+
+            command = sys.argv[1]
+            args = sys.argv[2:]
+
         if not commands.count(command):
             usage("no such command '%s'" % command)
 
-        args = sys.argv[2:]
     else:
         command = commands[0]
         args = sys.argv[1:]

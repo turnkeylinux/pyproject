@@ -14,7 +14,10 @@ PYCC=python -OO /usr/lib/python/py_compile.py
 
 PATH_DIST := $(PROGNAME)-$(shell date +%F)
 
-all:
+setup: 
+	./setup.sh $(PROGNAME)
+
+all: setup
 	@echo To install \(by default prefix=$(prefix)\): 
 	@echo     make install prefix=...
 

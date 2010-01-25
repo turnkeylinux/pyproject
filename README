@@ -39,13 +39,13 @@ USAGE
 	pylib/cmd_printargs.py
 	pylib/cmd_prog.py
 
-1) change project name 
-	edit Makefile and replace 'project' PROGNAME into your project's name
-	ln -s wrapper.py <PROGNAME> 
-	ln -s <PROGNAME> <PROGNAME>-<subcmd>
+2) rename project?
+	make rename progname=newname
 
 2) add programs to the toolkit as pylib/cmd_<subcmd>.py
-ln -s <progname> <progname>-<subcmd>
+
+	make
+	make updatelinks
 
 Remember, you can run toolkit commands like this:
 

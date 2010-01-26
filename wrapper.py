@@ -62,7 +62,9 @@ def get_main_commands(path):
         m = re.match(r'^cmd_(.*)\.py[co]?$', file)
         if not m:
             continue
-        k[m.group(1)] = True
+        command = m.group(1)
+        command = command.replace("_", "-")
+        k[command] = True
     commands = k.keys()
 
     return commands

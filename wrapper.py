@@ -66,7 +66,8 @@ def get_main_commands(path):
         command = command.replace("_", "-")
         k[command] = True
     commands = k.keys()
-
+    commands.sort()
+    
     return commands
 
 def main():

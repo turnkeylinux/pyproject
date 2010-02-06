@@ -13,17 +13,17 @@ PYCC=python -OO /usr/lib/python/py_compile.py
 
 PATH_DIST := $(progname)-$(shell date +%F)
 
-all: updatelinks
+all:
 	@echo === USAGE ===
 	@echo 
 	@echo make install prefix=...
 	@echo "    " default prefix=$(prefix)
 	@echo
 	@echo make clean
-	@echo
 	@echo make dist
 	@echo
 	@echo make rename progname=...
+	@echo make updatelinks
 	@echo
 
 rename:

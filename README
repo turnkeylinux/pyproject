@@ -8,6 +8,9 @@ Python turnkey toolkit template, with two example commands
 FEATURES
 --------
 
+* integrated help support
+(e.g., command docstrings are automatically interpreted by wrapper)
+
 * sourceless installation target
 all python modules byte compiled with -OO (strips program of docstrings)
 
@@ -44,7 +47,7 @@ USAGE
 
 2) add programs to the toolkit as pylib/cmd_<subcmd>.py
 
-	make
+3) update links
 	make updatelinks
 
 Remember, you can run toolkit commands like this:
@@ -53,12 +56,36 @@ Remember, you can run toolkit commands like this:
 	<progname>-<subcmd> arg1 arg2 ...
 	<progname> <subcmd> arg1 arg2 ...
 
-3) install
+4) documentation / integrated help
+
+Usage:
+<progname> # prints list of programs
+<progname>-<command> -h # extended help
+
+Notes:
+- The first line of the module docstring is the short usage desc.
+- commands that have a usage() function, support the -h flag for extended help.
+- The help module defines a usage decorator for convenience.
+Example usage (see cmd_printargs for an example):
+
+import help
+@help.usage(__doc__)
+def usage():
+	print "Syntax: foo"
+
+Advanced:
+Normally, the order of the commands printed by <progname> is
+determined by their sort order. If you want to manually tweak with
+the order, then list the desired order in COMMANDS_USAGE_ORDER.
+
+Empty string values COMMANDS_USAGE_ORDER symbolize empty lines/seperators.
+
+5) install
 
 make install prefix=...  # prefix defaults to /usr/local
 
-4) uninstall
+6) uninstall
 
 make uninstall		# prefix defaults to /usr/local
 
-5) if you want to increment the version printed, edit version.py
+7) if you want to increment the version printed, edit version.py

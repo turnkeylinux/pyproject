@@ -90,7 +90,7 @@ class Commands:
         if error:
             print >> sys.stderr, "error: " + error
            
-        print >> sys.stderr, "Syntax: %s command [args]" % os.path.basename(get_av0())
+        print >> sys.stderr, "Syntax: %s <command> [args]" % os.path.basename(get_av0())
         print >> sys.stderr, "Commands:"
 
         def print_command(name):

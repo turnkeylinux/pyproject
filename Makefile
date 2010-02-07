@@ -9,22 +9,24 @@ PATH_INSTALL=$(prefix)/lib/$(progname)
 PATH_INSTALL_LIB=$(PATH_INSTALL)/pylib
 PATH_INSTALL_LIBEXEC=$(PATH_INSTALL)/libexec
 
-PYCC=python -OO /usr/lib/python/py_compile.py
+PYCC=python -O /usr/lib/python/py_compile.py
+PYCC_NODOC=python -OO /usr/lib/python/py_compile.py
 
 PATH_DIST := $(progname)-$(shell date +%F)
 
 all:
 	@echo === USAGE ===
 	@echo 
+	@echo make install-nodoc prefix=...
 	@echo make install prefix=...
-	@echo "    " default prefix=$(prefix)
+	@echo "        " \(default prefix $(prefix)\)
 	@echo
 	@echo make clean
 	@echo make dist
 	@echo
 	@echo make rename progname=...
 	@echo make updatelinks
-	@echo
+	@echo 
 
 rename:
 	scripts/rename.sh $(progname)
@@ -38,6 +40,9 @@ updatelinks:
 pycompile:
 	$(PYCC) pylib/*.py *.py
 
+pycompile-nodoc:
+	$(PYCC_NODOC) pylib/*.py *.py
+
 execproxy: execproxy.c
 	gcc execproxy.c -DMODULE_PATH=\"$(PATH_INSTALL)/wrapper.pyo\" -o _$(progname)
 	strip _$(progname)
@@ -49,7 +54,7 @@ uninstall:
 	# delete links from PATH_BIN
 	for f in $(progname)-*; do rm -f $(PATH_BIN)/$$f; done
 
-install: pycompile execproxy
+_install: execproxy
 	@echo
 	@echo \*\* CONFIG: prefix = $(prefix) \*\*
 	@echo 
@@ -63,6 +68,10 @@ install: pycompile execproxy
 
 	install -m 755 _$(progname) $(PATH_BIN)/$(progname)
 	cp -P $(progname)-* $(PATH_BIN)	
+
+install-nodoc: pycompile-nodoc _install
+
+install: pycompile  _install
 
 clean:
 	rm -f pylib/*.pyc pylib/*.pyo *.pyc *.pyo _$(progname)

@@ -1,5 +1,6 @@
 # standard Python project Makefile
 progname=pyproject
+name=
 
 prefix=/usr/local
 PATH_BIN=$(prefix)/bin
@@ -24,12 +25,33 @@ all:
 	@echo make clean
 	@echo make dist
 	@echo
-	@echo make rename progname=...
+	@echo make init name=...
+	@echo make rename name=...
 	@echo make updatelinks
 	@echo 
 
 rename:
-	scripts/rename.sh $(progname)
+ifeq ($(name),)
+	@echo error: name not set
+else
+	scripts/rename.sh $(name)
+endif
+
+init:
+ifneq ($(progname),pyproject)
+	@echo error: already initialized
+else
+
+ifeq ($(name),)
+	@echo error: name not set
+else
+	scripts/rename.sh $(name)
+
+	rm -rf .git/
+	cg-init
+endif
+
+endif
 
 updatelinks:
 	@echo -n updating links... " "

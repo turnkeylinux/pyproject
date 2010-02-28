@@ -16,28 +16,31 @@ PYCC_NODOC=python -OO /usr/lib/python/py_compile.py
 PATH_DIST := $(progname)-$(shell date +%F)
 
 all:
-	@echo === USAGE ===
+	@echo "=== USAGE ==="
 	@echo 
-	@echo make install-nodoc prefix=...
-	@echo make install prefix=...
-	@echo "        " \(default prefix $(prefix)\)
+	@echo "make install-nodoc prefix=<dirpath>"
+	@echo "make install prefix=<dirpath>"
+	@echo "         (default prefix $(prefix))"
 	@echo
-	@echo make clean
-	@echo make dist
+	@echo "make clean"
+	@echo "make dist"
 	@echo
-	@echo make init name=...
-	@echo make rename name=...
-	@echo make updatelinks
+	@echo "make init name=<project-name>"
+	@echo "make updatelinks"
 	@echo 
 
 rename:
+ifeq ($(progname),pyproject)
+	@echo error: you need to make init first
+else
 ifeq ($(name),)
 	@echo error: name not set
 else
 	scripts/rename.sh $(name)
 endif
+endif
 
-init:
+init: clean
 ifneq ($(progname),pyproject)
 	@echo error: already initialized
 else
@@ -47,8 +50,9 @@ ifeq ($(name),)
 else
 	scripts/rename.sh $(name)
 
+	rm README
 	rm -rf .git/
-	cg-init
+	cg-init -m "Initialized project $(name) from pyproject template"
 endif
 
 endif
@@ -107,3 +111,5 @@ dist: clean
 
 	tar jcvf $(PATH_DIST).tar.bz2 $(PATH_DIST)
 	rm -rf $(PATH_DIST)
+
+

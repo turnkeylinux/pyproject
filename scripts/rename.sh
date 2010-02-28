@@ -8,7 +8,10 @@ if [[ $# != 1 ]]; then
 fi
 
 progname=$1
-sed "s/^progname=.*/progname=$progname/" Makefile > Makefile.tmp
+cat Makefile | \
+awk 'BEGIN {p = 1} /^init:/ { p=0 } /^updatelinks:/ { p=1} p { print }' | \
+sed "s/make init/make rename/; \
+     s/^progname=.*/progname=$progname/" > Makefile.tmp
 mv Makefile.tmp Makefile
 
 $(dirname $0)/updatelinks.sh

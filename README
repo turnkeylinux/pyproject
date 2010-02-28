@@ -42,8 +42,8 @@ USAGE
 	pylib/cmd_printargs.py
 	pylib/cmd_prog.py
 
-2) rename project?
-	make rename progname=newname
+2) initialize project?
+	make init name=newname
 
 2) add programs to the toolkit as pylib/cmd_<subcmd>.py
 

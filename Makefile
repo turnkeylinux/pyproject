@@ -18,15 +18,17 @@ PATH_DIST := $(progname)-$(shell date +%F)
 all:
 	@echo "=== USAGE ==="
 	@echo 
-	@echo "make install-nodoc prefix=<dirpath>"
+	@echo "make install-nodoc prefix=<dirpath>   # strip docstrings and install"
 	@echo "make install prefix=<dirpath>"
 	@echo "         (default prefix $(prefix))"
+	@echo "make uninstall prefix=<dirpatch>"
 	@echo
 	@echo "make clean"
-	@echo "make dist"
+	@echo "make dist                      # create distribution tarball"
+	@echo "make gitdist                   # create git distribution tarball"
 	@echo
-	@echo "make init name=<project-name>"
-	@echo "make updatelinks"
+	@echo "make init name=<project-name>  # initialize project"
+	@echo "make updatelinks               # update toolkit command links"
 	@echo 
 
 rename:
@@ -113,3 +115,10 @@ dist: clean
 	rm -rf $(PATH_DIST)
 
 
+gitdist: clean
+	-mkdir -p $(PATH_DIST)-git
+	-cp -a .git $(PATH_DIST)-git
+	cd $(PATH_DIST)-git && git-repack -a -d
+
+	tar jcvf $(PATH_DIST)-git.tar.bz2 $(PATH_DIST)-git
+	rm -rf $(PATH_DIST)-git

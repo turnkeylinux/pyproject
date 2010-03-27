@@ -1,13 +1,6 @@
 #!/usr/bin/python
 # Copyright (c) 2010 TurnKey Linux - all rights reserved
-"""
-Execution wrapper.
-
-What it does is:
-1) Adds PATH_LIBEXEC to the PATH environment.
-2) Proxies execution to the specified command.
-
-This hides the various executable components behind a single tool.
+"""Python project skeleton
 """
 
 import re
@@ -91,8 +84,9 @@ class Commands:
             print >> sys.stderr, "error: " + error
            
         print >> sys.stderr, "Syntax: %s <command> [args]" % os.path.basename(get_av0())
+        if __doc__:
+            print __doc__
         print >> sys.stderr, "Commands:"
-
         def print_command(name):
             command = self.commands.get(name)
             if command:

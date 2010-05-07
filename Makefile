@@ -94,6 +94,7 @@ _install: execproxy
 
 	install -m 644 version.pyo wrapper.pyo $(PATH_INSTALL)
 
+#	install -m 4755 _$(progname) $(PATH_BIN)/$(progname) # install SUID 
 	install -m 755 _$(progname) $(PATH_BIN)/$(progname)
 	cp -P $(progname)-* $(PATH_BIN)	
 

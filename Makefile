@@ -106,7 +106,6 @@ install: pycompile  _install
 
 clean:
 	rm -f pylib/*.pyc pylib/*.pyo *.pyc *.pyo _$(progname)
-	rm -rf build/
 
 dist: clean
 	-mkdir -p $(PATH_DIST)

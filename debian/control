@@ -1,0 +1,12 @@
+Source: pyproject
+Section: misc
+Priority: optional
+Maintainer: full name <name@turnkeylinux.org>
+Build-Depends: debhelper (>> 4.2.0)
+Standards-Version: 3.6.1
+
+Package: pyproject
+Architecture: any
+Depends: 
+Description: <insert up to 60 chars short description>
+ <insert long description, indented with spaces>

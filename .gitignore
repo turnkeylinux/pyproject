@@ -1,6 +1,4 @@
-prog
-build
-patches
+tmp
 *.pyc
 *.pyo
 *.tar.bz2

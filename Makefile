@@ -10,6 +10,8 @@ PATH_INSTALL=$(prefix)/lib/$(progname)
 PATH_INSTALL_LIB=$(PATH_INSTALL)/pylib
 PATH_INSTALL_LIBEXEC=$(PATH_INSTALL)/libexec
 
+TRUEPATH_INSTALL=$(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
+
 PYCC=python -O /usr/lib/python/py_compile.py
 PYCC_NODOC=python -OO /usr/lib/python/py_compile.py
 
@@ -21,7 +23,7 @@ all:
 	@echo "make install-nodoc prefix=<dirpath>   # strip docstrings and install"
 	@echo "make install prefix=<dirpath>"
 	@echo "         (default prefix $(prefix))"
-	@echo "make uninstall prefix=<dirpatch>"
+	@echo "make uninstall prefix=<dirpath>"
 	@echo
 	@echo "make clean"
 	@echo "make dist                      # create distribution tarball"
@@ -74,7 +76,7 @@ pycompile-nodoc:
 	$(PYCC_NODOC) pylib/*.py *.py
 
 execproxy: execproxy.c
-	gcc execproxy.c -DMODULE_PATH=\"$(PATH_INSTALL)/wrapper.pyo\" -o _$(progname)
+	gcc execproxy.c -DMODULE_PATH=\"$(TRUEPATH_INSTALL)/wrapper.pyo\" -o _$(progname)
 	strip _$(progname)
 
 uninstall:

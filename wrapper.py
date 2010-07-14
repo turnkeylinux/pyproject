@@ -9,7 +9,7 @@ import os
 import imp
 import version
 
-COPYRIGHT="version v%d.%d (c) 2010 TurnKey Linux - all rights reserved" % (version.major, version.minor)
+COPYRIGHT="version %s (c) 2010 TurnKey Linux - all rights reserved"
 
 # location of our python modules
 PATH_LIB="pylib"
@@ -79,7 +79,7 @@ class Commands:
             self.commands[command_name] = self.Command(command_name, module)
     
     def usage(self, error=None):
-        print >> sys.stderr, COPYRIGHT
+        print >> sys.stderr, COPYRIGHT % version.get_version()
         if error:
             print >> sys.stderr, "error: " + error
            

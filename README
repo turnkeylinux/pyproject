@@ -41,6 +41,14 @@ project arg1 arg2
 automatically sets up pylib into your python path 
 automatically sets up libexec into your PATH
 
+* tag-based auto-versioning
+calculates program version automatically from the most recent annotated 
+git tag in the following format:
+	<tag-name>-<revisions-since-tag>-<commit-id[:8]>
+
+If no tags have yet been created, a date based version is calculated:
+	YY-MM-DD.<commit-id[:8]>
+
 USAGE
 -----
 
@@ -98,4 +106,8 @@ make install prefix=...  # prefix defaults to /usr/local
 
 make uninstall		# prefix defaults to /usr/local
 
-9) if you want to increment the version printed, edit version.py
+9) tag the latest commit as a versioned release:
+
+# this will ask you for a tag message (which may include release notes)
+# and create a tag signed by your GPG key
+git-tag -s v1.0.1

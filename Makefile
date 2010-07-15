@@ -58,7 +58,10 @@ else
 	rm -rf tests
 	rm -rf .git/
 
-	cg-init -m "Initialized project $(name) from pyproject template"
+	git-init
+	git-add .
+
+	git-commit -m "Initialized project '$(name)' from pyproject template"
 endif
 
 endif

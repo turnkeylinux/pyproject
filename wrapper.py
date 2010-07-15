@@ -7,6 +7,7 @@ import re
 import sys
 import os
 import imp
+import getopt
 import version
 
 COPYRIGHT="version %s (c) 2010 TurnKey Linux - all rights reserved"
@@ -37,6 +38,10 @@ def get_av0():
 
     return os.path.basename(av0)
 
+def fatal(e):
+    print >> sys.stderr, "fatal: " + str(e)
+    sys.exit(1)
+    
 class Commands:
     class Command:
         def __init__(self, name, module):
@@ -81,7 +86,7 @@ class Commands:
     def usage(self, error=None):
         print >> sys.stderr, COPYRIGHT % version.get_version()
         if error:
-            print >> sys.stderr, "error: " + error
+            print >> sys.stderr, "error: " + str(error)
            
         print >> sys.stderr, "Syntax: %s <command> [args]" % os.path.basename(get_av0())
         if __doc__:
@@ -116,7 +121,7 @@ class Commands:
     def exists(self, name):
         return self.commands.has_key(name)
 
-    def run(self, name, args):
+    def _pre_run(self, name, args):
         sys.argv = [ name ] + args
         command = self.get(name)
         if '-h' in args or '--help' in args:
@@ -125,8 +130,29 @@ class Commands:
             except AttributeError:
                 print >> sys.stderr, "error: no help for " + name
                 sys.exit(1)
-            
+
+        return command
+        
+    def run(self, name, args):
+        command = self._pre_run(name, args)
         command.module.main()
+
+    def debug(self, name, args):
+        command = self._pre_run(name, args)
+        import pdb
+        pdb.runcall(command.module.main)
+
+    def profile(self, name, args):
+        import profile
+        import pstats
+        import tempfile
+
+        command = self._pre_run(name, args)
+        statsfile = tempfile.mkstemp(".prof")[1]
+        profile.runctx('command.module.main()', globals(), locals(), statsfile)
+        pstats.Stats(statsfile).strip_dirs().sort_stats('cumulative').print_stats()
+        
+        os.remove(statsfile)
         
     def __len__(self):
         return len(self.commands)
@@ -142,6 +168,8 @@ def main():
 
     commands = Commands(pylib_path)
 
+    use_profiler = False
+    use_debugger = False
     if len(commands) > 1:
         av0 = get_av0()
 
@@ -150,11 +178,27 @@ def main():
             name = av0[av0.index('-') + 1:]
             args = sys.argv[1:]
         except ValueError:
-            if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
-                commands.usage()
+            try:
+                opts, args = getopt.getopt(sys.argv[1:], 'pdh')
+            except getopt.GetoptError, e:
+                commands.usage(e)
 
-            name = sys.argv[1]
-            args = sys.argv[2:]
+            for opt, val in opts:
+                if opt == '-h':
+                    commands.usage()
+                if opt == '-p':
+                    use_profiler = True
+                elif opt == '-d':
+                    use_debugger = True
+
+            if use_profiler and use_debugger:
+                fatal("can't use both profiler and debugger")
+
+            if not args:
+                commands.usage()
+            
+            name = args[0]
+            args = args[1:]
 
         if not commands.exists(name):
             commands.usage("no such name '%s'" % name)
@@ -163,7 +207,12 @@ def main():
         name = commands.get_names()[0]
         args = sys.argv[1:]
 
-    commands.run(name, args)
+    if use_debugger:
+        commands.debug(name, args)
+    elif use_profiler:
+        commands.profile(name, args)
+    else:
+        commands.run(name, args)
     
 if __name__=='__main__':
     main()

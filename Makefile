@@ -54,7 +54,7 @@ ifeq ($(name),)
 else
 	scripts/rename.sh $(name)
 
-	rm README
+	rm docs/README
 	rm -rf tests
 	rm -rf .git/
 

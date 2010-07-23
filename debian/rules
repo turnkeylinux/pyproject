@@ -15,7 +15,7 @@ clean:
 
 install: build
 	dh_clean -k
-	dh_installdocs README
+	dh_installdocs docs/
 	$(MAKE) install prefix=$(prefix)
 	#$(MAKE) install-nodoc prefix=$(prefix)
 

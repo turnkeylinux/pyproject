@@ -1,7 +1,7 @@
 Source: pyproject
 Section: misc
 Priority: optional
-Maintainer: full name <name@turnkeylinux.org>
+Maintainer: Liraz Siri <liraz@turnkeylinux.org>
 Build-Depends: debhelper (>> 4.2.0)
 Standards-Version: 3.6.1
 

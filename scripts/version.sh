@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # calculate the version according to the current working git repository
 # if we can, we use git-describe to calculate version from the most recent tag
 # otherwise, we calculate a version based on the last commit

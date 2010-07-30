@@ -24,7 +24,6 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_fixperms -a
 	dh_installdeb -a
 	dh_gencontrol -a
 	dh_md5sums -a

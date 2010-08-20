@@ -194,6 +194,10 @@ def main():
             if use_profiler and use_debugger:
                 fatal("can't use both profiler and debugger")
 
+            is_running_suid = os.getuid() != os.geteuid()
+            if is_running_suid and use_debugger:
+                fatal("won't allow debugger while running suid")
+
             if not args:
                 commands.usage()
             

@@ -12,7 +12,9 @@ fi
 progname=$(sed -n 's/^progname=//p' Makefile)
 
 for oldlink in $(find -type l -maxdepth 1); do
-    [ "$git" == "true" ] && (git-rm $oldlink >& /dev/null || true)
+    if [ "$git" == "true" ]; then
+	git-rm $oldlink >& /dev/null || true
+    fi
     rm -f $oldlink
 done
 
@@ -24,6 +26,8 @@ for pymodule in pylib/cmd_*.py; do
 	newlink=${progname}-${command}
 	
 	ln -s $progname $newlink
-	[ "$git" == "true" ] && git-add $newlink
+	if [ "$git" == "true" ]; then
+	    git-add $newlink
+	fi
 done
 

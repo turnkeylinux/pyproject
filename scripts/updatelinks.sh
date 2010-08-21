@@ -21,13 +21,17 @@ done
 ln -s wrapper.py $progname
 git-add $progname
 
-for pymodule in pylib/cmd_*.py; do
-	command=$(echo $pymodule | sed -n 's/^.*\/cmd_\(.*\).py$/\1/p' | sed 's/_/-/g')
+cmd_modules=(pylib/cmd_*.py)
+if [ ${#cmd_modules[*]} -gt 1 ]; then
+    for cmd_module in ${cmd_modules[*]}; do
+	command=$(echo $cmd_module | sed -n 's/^.*\/cmd_\(.*\).py$/\1/p' | sed 's/_/-/g')
 	newlink=${progname}-${command}
 	
 	ln -s $progname $newlink
 	if [ "$git" == "true" ]; then
 	    git-add $newlink
 	fi
-done
+    done
+fi
+
 

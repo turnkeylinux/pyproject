@@ -49,6 +49,15 @@ git tag in the following format:
 If no tags have yet been created, a date based version is calculated:
 	YY-MM-DD.<commit-id[:8]>
 
+To print out program version:
+	project --version
+
+* integrated profiler support
+project -p subcommand args...
+
+* integrated debugging support
+project -d subcommand args...
+
 USAGE
 -----
 
@@ -111,3 +120,7 @@ make uninstall		# prefix defaults to /usr/local
 # this will ask you for a tag message (which may include release notes)
 # and create a tag signed by your GPG key
 git-tag -s v1.0.1
+
+(use of git-tag-release is recommeneded it its available)
+
+

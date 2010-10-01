@@ -1,5 +1,6 @@
 # standard Python project Makefile
 progname=pyproject
+oldname=$(progname)
 name=
 
 prefix=/usr/local
@@ -41,7 +42,7 @@ else
 ifeq ($(name),)
 	@echo error: name not set
 else
-	scripts/rename.sh $(name)
+	scripts/rename.sh $(oldname) $(name)
 endif
 endif
 
@@ -53,7 +54,7 @@ else
 ifeq ($(name),)
 	@echo error: name not set
 else
-	scripts/rename.sh $(name)
+	scripts/rename.sh $(oldname) $(name)
 
 	rm docs/README
 	rm -rf tests

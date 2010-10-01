@@ -12,9 +12,9 @@ if git_version=$(git-describe HEAD 2>/dev/null); then
 else
     if last_commit=$(git-rev-parse HEAD 2>/dev/null); then
 	    unixtime=$(git-show --quiet --pretty=format:%at $last_commit)
-	    date=$(date -ud "1970-01-01 UTC + $unixtime sec" +%F)
+	    date=$(date -ud "1970-01-01 UTC + $unixtime sec" +%Y.%m.%d)
 
-	    echo $date.${last_commit:0:8}
+	    echo 0-$date-${last_commit:0:8}
     else
 	echo "error: can't determine version"
 	exit 1

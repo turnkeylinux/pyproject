@@ -10,9 +10,11 @@ def get_version():
         return file(version_file).readline().strip()
 
     orig_cwd = os.getcwd()
-    os.chdir(install_path)
 
+    os.chdir(install_path)
     status, output = commands.getstatusoutput("autoversion HEAD")
+    os.chdir(orig_cwd)
+    
     if status != 0:
         return "?"
 

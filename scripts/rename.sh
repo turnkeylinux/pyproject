@@ -2,25 +2,24 @@
 
 set -e
 
-if [[ $# != 1 ]]; then
-    echo syntax: $0 newname
+if [[ $# != 2 ]]; then
+    echo syntax: $0 oldname newname
     exit 1
 fi
 
-progname=$1
+oldname=$1
+newname=$2
 cat Makefile | \
 awk 'BEGIN {p = 1} /^init:/ { p=0 } /^updatelinks:/ { p=1} p { print }' | \
 sed "s/make init/make rename/; \
-     s/^progname=.*/progname=$progname/" > Makefile.tmp
+     s/^progname=.*/progname=$newname/" > Makefile.tmp
 mv Makefile.tmp Makefile
 
-sed -i -e "s/^progname=.*/progname=$progname/" debian/rules
+sed -i -e "s/^progname=.*/progname=$newname/" debian/rules
 
-sed -i -e "s/^Source:.*/Source: $progname/; \
-           s/^Package:.*/Package: $progname/; \
+sed -i -e "s/^Source:.*/Source: $newname/; \
+           s/^Package:.*/Package: $newname/; \
            s/^Maintainer:.*/Maintainer: $GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>/" debian/control
 
-progchar=$(echo $progname | awk '{ print substr($1,1,1) }')
-sed -i -e "s/^REPODST=.*/REPODST=private\/$progchar\/$progname/" debian/pkginfo
-
+[ -f ${oldname}.leo ] && mv ${oldname}.leo ${newname}.leo
 $(dirname $0)/updatelinks.sh

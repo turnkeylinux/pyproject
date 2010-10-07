@@ -1,5 +1,6 @@
 # standard Python project Makefile
 progname=pyproject
+oldname=$(progname)
 name=
 
 prefix=/usr/local
@@ -41,7 +42,7 @@ else
 ifeq ($(name),)
 	@echo error: name not set
 else
-	scripts/rename.sh $(name)
+	scripts/rename.sh $(oldname) $(name)
 endif
 endif
 
@@ -53,7 +54,7 @@ else
 ifeq ($(name),)
 	@echo error: name not set
 else
-	scripts/rename.sh $(name)
+	scripts/rename.sh $(oldname) $(name)
 
 	rm docs/README
 	rm -rf tests
@@ -101,7 +102,7 @@ _install: execproxy
 	-install -m 755 libexec/* $(PATH_INSTALL_LIBEXEC)
 
 	install -m 644 version.pyo wrapper.pyo $(PATH_INSTALL)
-	scripts/version.sh > $(PATH_INSTALL)/version.txt
+	autoversion HEAD > $(PATH_INSTALL)/version.txt
 
 #	install -m 4755 _$(progname) $(PATH_BIN)/$(progname) # install SUID 
 	install -m 755 _$(progname) $(PATH_BIN)/$(progname)

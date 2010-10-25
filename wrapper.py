@@ -143,6 +143,18 @@ class Commands:
     def _pre_run(self, name, args):
         sys.argv = [ name ] + args
         command = self.get(name)
+
+        i = 1
+        while i < len(sys.argv):
+            if sys.argv[i] == "--profile":
+                self.use_profiler = True
+                del sys.argv[i]
+            elif sys.argv[i] == "--debug":
+                self.use_debugger = True
+                del sys.argv[i]
+            else:
+                i += 1
+
         if '-h' in args or '--help' in args:
             try:
                 command.module.usage()

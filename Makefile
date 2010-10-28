@@ -28,11 +28,15 @@ all:
 	@echo "make uninstall prefix=<dirpath>"
 	@echo
 	@echo "make clean"
-	@echo "make dist                      # create distribution tarball"
-	@echo "make gitdist                   # create git distribution tarball"
+	@echo "make dist                       # create distribution tarball"
+	@echo "make gitdist                    # create git distribution tarball"
 	@echo
-	@echo "make init name=<project-name>  # initialize project"
-	@echo "make updatelinks               # update toolkit command links"
+ifeq ($(progname),pyproject)
+	@echo "make init name=<project-name>   # initialize project"
+else
+	@echo "make rename name=<project-name> # initialize project"
+endif
+	@echo "make updatelinks                # update toolkit command links"
 	@echo 
 
 rename:
@@ -47,25 +51,15 @@ endif
 endif
 
 init: clean
-ifneq ($(progname),pyproject)
-	@echo error: already initialized
-else
-
 ifeq ($(name),)
 	@echo error: name not set
 else
-	scripts/rename.sh $(oldname) $(name)
-
-	rm docs/README
-	rm -rf tests
-	rm -rf .git/
-
-	git-init
-	git-add .
-
-	git-commit -m "Initialized project '$(name)' from pyproject template"
-endif
-
+	@if [ -x scripts/init.sh ]; then \
+		scripts/rename.sh $(oldname) $(name); \
+		scripts/init.sh $(name); \
+	else \
+		echo error: already initialized; \
+	fi
 endif
 
 updatelinks:

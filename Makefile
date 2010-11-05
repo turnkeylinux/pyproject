@@ -10,6 +10,7 @@ PATH_BIN=$(prefix)/bin
 PATH_INSTALL=$(prefix)/lib/$(progname)
 PATH_INSTALL_LIB=$(PATH_INSTALL)/pylib
 PATH_INSTALL_LIBEXEC=$(PATH_INSTALL)/libexec
+PATH_INSTALL_CONTRIB=$(prefix)/share/$(progname)/contrib
 
 TRUEPATH_INSTALL=$(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
 
@@ -91,6 +92,13 @@ _install: execproxy
 	@echo 
 
 	install -d $(PATH_BIN) $(PATH_INSTALL) $(PATH_INSTALL_LIB) $(PATH_INSTALL_LIBEXEC)
+
+	# if contrib exists
+	contrib=$$(echo contrib/*); \
+	if [ "$$contrib" != "contrib/*" ]; then \
+		mkdir -p $(PATH_INSTALL_CONTRIB); \
+		cp -a contrib/* $(PATH_INSTALL_CONTRIB); \
+	fi
 
 	install -m 644 pylib/*.pyo $(PATH_INSTALL_LIB)
 	-install -m 755 libexec/* $(PATH_INSTALL_LIBEXEC)

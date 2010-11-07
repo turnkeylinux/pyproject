@@ -10,7 +10,8 @@ PATH_BIN=$(prefix)/bin
 PATH_INSTALL=$(prefix)/lib/$(progname)
 PATH_INSTALL_LIB=$(PATH_INSTALL)/pylib
 PATH_INSTALL_LIBEXEC=$(PATH_INSTALL)/libexec
-PATH_INSTALL_CONTRIB=$(prefix)/share/$(progname)/contrib
+PATH_INSTALL_SHARE=$(prefix)/share/$(progname)
+PATH_INSTALL_CONTRIB=$(PATH_INSTALL_SHARE)/contrib
 
 TRUEPATH_INSTALL=$(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
 
@@ -81,6 +82,7 @@ execproxy: execproxy.c
 
 uninstall:
 	rm -rf $(PATH_INSTALL)
+	rm -rf $(PATH_INSTALL_SHARE)
 	rm -f $(PATH_BIN)/$(progname)
 
 	# delete links from PATH_BIN

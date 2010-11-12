@@ -19,7 +19,9 @@ for oldlink in $(find -maxdepth 1 -type l); do
 done
 
 ln -s wrapper.py $progname
-git-add $progname
+if [ "$git" == "true" ]; then
+    git-add $progname
+fi
 
 cmd_modules=(pylib/cmd_*.py)
 if [ ${#cmd_modules[*]} -gt 1 ]; then

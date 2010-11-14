@@ -108,6 +108,7 @@ _install: execproxy
 	if [ "$$icons" != "icons/*" ]; then \
 		mkdir -p $(PATH_INSTALL_ICONS); \
 		cp -a icons/* $(PATH_INSTALL_ICONS); \
+		rm -f $(PATH_INSTALL)/icons; \
 		ln -s $(PATH_INSTALL_ICONS) $(PATH_INSTALL)/icons; \
 	fi
 

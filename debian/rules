@@ -3,7 +3,7 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-progname=pyproject
+progname=$(shell awk '/^Source/ {print $$2}' debian/control)
 prefix=debian/$(progname)/usr
 
 build:

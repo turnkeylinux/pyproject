@@ -1,6 +1,5 @@
 # standard Python project Makefile
-progname=pyproject
-oldname=$(progname)
+progname=$(shell awk '/^Source/ {print $$2}' debian/control)
 name=
 
 prefix=/usr/local
@@ -49,7 +48,7 @@ else
 ifeq ($(name),)
 	@echo error: name not set
 else
-	scripts/rename.sh $(oldname) $(name)
+	scripts/rename.sh $(progname) $(name)
 endif
 endif
 
@@ -58,7 +57,7 @@ ifeq ($(name),)
 	@echo error: name not set
 else
 	@if [ -x scripts/init.sh ]; then \
-		scripts/rename.sh $(oldname) $(name); \
+		scripts/rename.sh $(progname) $(name); \
 		scripts/init.sh $(name); \
 	else \
 		echo error: already initialized; \
@@ -108,7 +107,6 @@ _install: execproxy
 	if [ "$$icons" != "icons/*" ]; then \
 		mkdir -p $(PATH_INSTALL_ICONS); \
 		cp -a icons/* $(PATH_INSTALL_ICONS); \
-		rm -f $(PATH_INSTALL)/icons; \
 		ln -s $(PATH_INSTALL_ICONS) $(PATH_INSTALL)/icons; \
 	fi
 

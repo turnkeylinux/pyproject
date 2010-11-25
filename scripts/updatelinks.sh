@@ -9,7 +9,7 @@ else
     git=false
 fi
 
-progname=$(sed -n 's/^progname=//p' Makefile)
+progname=$(awk '/^Source/ {print $2}' debian/control)
 
 for oldlink in $(find -maxdepth 1 -type l); do
     if [ "$git" == "true" ]; then

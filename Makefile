@@ -10,7 +10,6 @@ PATH_INSTALL=$(prefix)/lib/$(progname)
 PATH_INSTALL_LIB=$(PATH_INSTALL)/pylib
 PATH_INSTALL_LIBEXEC=$(PATH_INSTALL)/libexec
 PATH_INSTALL_SHARE=$(prefix)/share/$(progname)
-PATH_INSTALL_ICONS=$(PATH_INSTALL_SHARE)/icons
 PATH_INSTALL_CONTRIB=$(PATH_INSTALL_SHARE)/contrib
 
 TRUEPATH_INSTALL=$(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
@@ -100,14 +99,6 @@ _install: execproxy
 	if [ "$$contrib" != "contrib/*" ]; then \
 		mkdir -p $(PATH_INSTALL_CONTRIB); \
 		cp -a contrib/* $(PATH_INSTALL_CONTRIB); \
-	fi
-
-	# if icons exists
-	icons=$$(echo icons/*); \
-	if [ "$$icons" != "icons/*" ]; then \
-		mkdir -p $(PATH_INSTALL_ICONS); \
-		cp -a icons/* $(PATH_INSTALL_ICONS); \
-		ln -s $(PATH_INSTALL_ICONS) $(PATH_INSTALL)/icons; \
 	fi
 
 	install -m 644 pylib/*.pyo $(PATH_INSTALL_LIB)

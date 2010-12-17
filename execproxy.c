@@ -13,7 +13,7 @@ void
 clean_environ(void)
 {
 	static char def_IFS[] = "IFS= \t\n";
-	static char def_PATH[] = "PATH=/sbin:/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin";
+	static char def_PATH[] = "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/bin:/usr/sbin";
 	static char def_CDPATH[] = "CDPATH=.";
 	static char def_ENV[] = "ENV=:";
 

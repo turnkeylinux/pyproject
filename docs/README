@@ -4,7 +4,7 @@ ABOUT
 -----
 
 Python turnkey toolkit template, with two example commands
-1) printargs # prints list of arguments
+1) example # dummy example command that parses options
 2) prog # prints 'prog' not implemented
 
 FEATURES
@@ -20,6 +20,9 @@ the sourceless python program is executed through a binary execution proxy
 	allowing MAC rules to be applied to the toolkit
 	prevents python environment manipulation tricks
 		tricks that could be used to exploit privileged python apps
+	cleans the environment prior to execution in suid mode
+		clears LD_* variables
+		sets PATH, CDPATH, IFS to good values
 
 * intergrated packaging support
 debian/* will be updated when the project is initialized and/or renamed.
@@ -37,44 +40,43 @@ project-command arg1 arg2 ...
 project arg1 arg2
 
 * wrapper environment setup
-
 automatically sets up pylib into your python path 
 automatically sets up libexec into your PATH
 
-* tag-based auto-versioning
-calculates program version automatically from the most recent annotated 
-git tag in the following format:
-	<tag-name>-<revisions-since-tag>-<commit-id[:8]>
+* auto-versioning
 
-If no tags have yet been created, a date based version is calculated:
-	YY-MM-DD.<commit-id[:8]>
+Extracts version automatically from either:
+1) debian/changelog (if it exists)
+2) autoversion HEAD
 
 To print out program version:
 	project --version
 
 * integrated profiler support
 project -p subcommand args...
+project-subcommand --profile args...
 
 * integrated debugging support
 project -d subcommand args...
+project-subcommand --debug args..
 
 USAGE
 -----
 
-1) remove example dummy commands?
+* remove example dummy commands?
 	pylib/cmd_printargs.py
 	pylib/cmd_prog.py
 
-2) initialize project?
+* initialize project?
 	make init name=newname
 
-3) update packaging files
+* update packaging files
 	eg. debian/control with depend's and descriptions
 	note: see "projectbuilding" for more information
 
-4) add programs to the toolkit as pylib/cmd_<subcmd>.py
+* add programs to the toolkit as pylib/cmd_<subcmd>.py
 
-5) update links
+* update links
 	make updatelinks
 
 Remember, you can run toolkit commands like this:
@@ -83,14 +85,14 @@ Remember, you can run toolkit commands like this:
 	<progname>-<subcmd> arg1 arg2 ...
 	<progname> <subcmd> arg1 arg2 ...
 
-6) documentation / integrated help
+* documentation / integrated help
 
 Usage:
-<progname> # prints list of programs
+<progname> # prints high level overview of programs + help
 <progname>-<command> -h # extended help
 
 Notes:
-- The first line of the module docstring is the short usage desc.
+- The first line of a cmd_* module docstring is the short usage desc.
 - commands that have a usage() function, support the -h flag for extended help.
 - The help module defines a usage decorator for convenience.
 Example usage (see cmd_printargs for an example):
@@ -107,20 +109,18 @@ the order, then list the desired order in COMMANDS_USAGE_ORDER.
 
 Empty string values COMMANDS_USAGE_ORDER symbolize empty lines/seperators.
 
-7) install
+* install
 
 make install prefix=...  # prefix defaults to /usr/local
 
-8) uninstall
+* uninstall
 
 make uninstall		# prefix defaults to /usr/local
 
-9) tag the latest commit as a versioned release:
+* tag the latest commit as a versioned release:
 
 # this will ask you for a tag message (which may include release notes)
 # and create a tag signed by your GPG key
 git-tag -s v1.0.1
 
-(use of git-tag-release is recommeneded it its available)
-
-
+(if available, use of git-tag-release is recommended)

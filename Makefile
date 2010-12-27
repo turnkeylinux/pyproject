@@ -105,8 +105,7 @@ _install: execproxy
 	-install -m 755 libexec/* $(PATH_INSTALL_LIBEXEC)
 
 	install -m 644 wrapper.pyo $(PATH_INSTALL)
-	([ -f debian/changelog ] && (dpkg-parsechangelog | awk '/^Version/ {print $$2 }') || \
-		autoversion HEAD) > $(PATH_INSTALL)/version.txt
+	./$(progname) --version > $(PATH_INSTALL)/version.txt
 
 	for f in $(progname)*; do \
 		if [ -x $$f ]; then \

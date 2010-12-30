@@ -65,7 +65,7 @@ endif
 
 updatelinks:
 	@echo -n updating links... " "
-	@scripts/updatelinks.sh
+	@scripts/updatelinks.sh $(progname)
 	@echo done.
 	@echo
 

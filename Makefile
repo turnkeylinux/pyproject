@@ -21,7 +21,7 @@ ifeq ($(shell basename $(shell pwd)),pyproject)
 	$(error won't initialize pyproject in-place)
 endif
 	rm -f docs/*
-	rm -rf tests share debian 
+	rm -rf tests share debian pylib setup.py
 
 	cp template/.gitignore ./
 	cp -a template/* ./

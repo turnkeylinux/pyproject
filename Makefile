@@ -35,6 +35,8 @@ endif
 	git-commit -m "Initialized project '$(name)' from pyproject template"
 
 install:
+	python setup.py install -O2 --prefix $(prefix)
+
 	mkdir -p $(PATH_INSTALL_SHARE)
 	cp -a share/* $(PATH_INSTALL_SHARE)
 
@@ -42,6 +44,6 @@ uninstall:
 	rm -rf $(PATH_INSTALL_SHARE)
 
 clean:
-	@echo nothing to clean
+	rm -rf build
 
 .PHONY: init

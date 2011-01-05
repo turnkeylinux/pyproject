@@ -15,8 +15,6 @@ PATH_INSTALL_LIBEXEC = $(PATH_INSTALL)/libexec
 PATH_INSTALL_SHARE = $(prefix)/share/$(progname)
 PATH_INSTALL_CONTRIB = $(PATH_INSTALL_SHARE)/contrib
 
-TRUEPATH_INSTALL = $(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
-
 PYTHON_LIB = $(shell echo /usr/lib/python* | sed 's/.* //')
 
 PYCC_FLAGS = $(if $(INSTALL_NODOC),-OO,-O)
@@ -62,6 +60,7 @@ updatelinks:
 	@echo done.
 	@echo
 
+execproxy: TRUEPATH_INSTALL = $(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
 execproxy: execproxy.c
 	gcc execproxy.c -DMODULE_PATH=\"$(TRUEPATH_INSTALL)/wrapper.pyo\" -o _$(progname)
 	strip _$(progname)

@@ -2,8 +2,8 @@
 <?xml-stylesheet ekr_test?>
 <leo_file>
 <leo_header file_format="2" tnodes="0" max_tnode_index="49" clone_windows="0"/>
-<globals body_outline_ratio="0.230439442658">
-	<global_window_position top="0" left="569" height="933" width="700"/>
+<globals body_outline_ratio="0.363344051447">
+	<global_window_position top="0" left="570" height="933" width="700"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
 <preferences/>
@@ -17,18 +17,24 @@
 <v t="zaril.20110105105904.1" a="M"><vh>build pyproject-common</vh></v>
 <v t="zaril.20110105110028" a="M"><vh>suid support</vh></v>
 <v t="zaril.20110105122542" a="M"><vh>globalize support scripts</vh></v>
-<v t="zaril.20110104133327.1" a="M"><vh>import pyproject.py from turnkey-pylib</vh></v>
-<v t="zaril.20110105131729" a="ETV"><vh>centralized debian/rules</vh>
+<v t="zaril.20110104133327.1" a="EM"><vh>import pyproject.py from turnkey-pylib</vh>
+<v t="zaril.20110105154504" a="M"><vh>bug: the python wrapper doesn't work anymore</vh></v>
+</v>
+<v t="zaril.20110105131729" a="EM"><vh>centralized debian/rules</vh>
 <v t="zaril.20110105150653"><vh>options</vh></v>
 </v>
+<v t="zaril.20110105174253" a="M"><vh>add debug target to pyproject.mk</vh></v>
+<v t="zaril.20110105175348" a="MTV"><vh>refactor pyproject.mk</vh></v>
+<v t="zaril.20110105223455" a="M"><vh>add inheritable hooking mechanism</vh></v>
+<v t="zaril.20110105150435" a="E"><vh>port all pyprojects</vh></v>
 </v>
 </v>
 <v t="zaril.20101001200109.1" a="E"><vh>bugs/wishlist</vh>
-<v t="zaril.20110105150435"><vh>port all pyprojects</vh></v>
 <v t="zaril.20110104133430"><vh>update documentation</vh></v>
 <v t="zaril.20110104133430.1"><vh>add template support for external libraries</vh></v>
 <v t="zaril.20110105101835"><vh>set maintainer automatically at init?</vh></v>
-<v t="zaril.20110104133327.2"><vh>release v1.0</vh></v>
+<v t="zaril.20110104133327.2"><vh>release v1.0 of pyproject</vh></v>
+<v t="zaril.20110105165502"><vh>bug: nodoc doesn't work anymre?</vh></v>
 </v>
 </v>
 </vnodes>
@@ -197,17 +203,73 @@ A:
 </t>
 <t tx="zaril.20110105131729">debian-rules.mk
 
+configurable globally 
+    by changing pyproject's 
+
+
+TEST: init pyproject as test and try to get it
+
+GOTCHA: pbuilder can't get pyproject-common
+    workaround: install pyproject-common manually into the feisty buildroot
+
+
+* IDEAS:
+deckdebuild shouldn't use pbuilder to resolve build dependencies?
+    or rather it should try to resolve the dependencies with a pool first? 
+
+give the pool an apt-like interface so we can get packages from it?
+
+extend apt so it know
+
+
+
 </t>
 <t tx="zaril.20110105150435">rm -rf scripts
 replace Makefile
+add pyproject-common to build depends and depends
 
 
+ectoplasm is a special case
+    review Alon's patch to see how he handled it
 
 write email to alon explaining how to port his packages
 
 </t>
 <t tx="zaril.20110105150653">no documentation
-verboseness
+
+INSTALL_NODOC
+
 </t>
+<t tx="zaril.20110105154504">problem: its not seeing the pyproject module because we deleted the pyc and py versions
+
+IDEA:
+    compile execproxy and point to it instead of wrapper.py?
+        nah, the execproxy only works with installed wrappers
+
+SOLUTION: python -O wrapper.py --version
+
+
+</t>
+<t tx="zaril.20110105165502">py_compile behaves differently on Python 2.5
+
+DISCOVERY: what worked 
+E: compile on gentoo and compile on feisty
+
+/usr/lib/python2.4/
+
+python -OO /usr/lib/python2.4/py_compile.py cmd_example.py</t>
+<t tx="zaril.20110105174253"></t>
+<t tx="zaril.20110105175348"></t>
+<t tx="zaril.20110105223455">EXTENDABLE_TARGETS = help build install uninstall clean
+
+undefined hooks
+    target/pre
+    target/post
+    target/deps/extra
+    
+override after
+    target/deps
+    target/body
+    </t>
 </tnodes>
 </leo_file>

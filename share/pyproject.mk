@@ -28,7 +28,9 @@ PATH_DIST := $(progname)-$(shell date +%F)
 INSTALL_SUID = 
 INSTALL_FILE_MOD = $(if $(INSTALL_SUID), 4755, 755)
 
-all:
+all: help
+
+help:
 	@echo "=== USAGE ==="
 	@echo 
 	@echo "make install prefix=<dirpath>"

@@ -96,7 +96,7 @@ _install: execproxy
 	-install -m 755 libexec/* $(PATH_INSTALL_LIBEXEC)
 
 	install -m 644 wrapper.pyo $(PATH_INSTALL)
-	./$(progname) --version > $(PATH_INSTALL)/version.txt
+	python -O wrapper.py --version > $(PATH_INSTALL)/version.txt
 
 	for f in $(progname)*; do \
 		if [ -x $$f ]; then \

@@ -1,3 +1,6 @@
+_self = $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
+PYPROJECT_SHARE_PATH ?= $(shell dirname $(_self))
+
 # standard Python project Makefile
 progname=$(shell awk '/^Source/ {print $$2}' debian/control)
 name=
@@ -48,12 +51,12 @@ rename:
 ifeq ($(name),)
 	@echo error: name not set
 else
-	scripts/rename.sh $(progname) $(name)
+	$(PYPROJECT_SHARE_PATH)/rename.sh $(progname) $(name)
 endif
 
 updatelinks:
 	@echo -n updating links... " "
-	@scripts/updatelinks.sh
+	@$(PYPROJECT_SHARE_PATH)/updatelinks.sh
 	@echo done.
 	@echo
 

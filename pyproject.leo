@@ -2,7 +2,7 @@
 <?xml-stylesheet ekr_test?>
 <leo_file>
 <leo_header file_format="2" tnodes="0" max_tnode_index="49" clone_windows="0"/>
-<globals body_outline_ratio="0.110396570204">
+<globals body_outline_ratio="0.230439442658">
 	<global_window_position top="0" left="569" height="933" width="700"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
@@ -15,7 +15,8 @@
 <v t="zaril.20110105105904" a="M"><vh>restructured pyproject initialization</vh></v>
 <v t="zaril.20110105102854" a="M"><vh>pyproject-common installation</vh></v>
 <v t="zaril.20110105105904.1" a="M"><vh>build pyproject-common</vh></v>
-<v t="zaril.20110105110028" a="ETV"><vh>suid support</vh></v>
+<v t="zaril.20110105110028" a="M"><vh>suid support</vh></v>
+<v t="zaril.20110105122542" a="MTV"><vh>globalize support scripts</vh></v>
 </v>
 </v>
 <v t="zaril.20101001200109.1" a="E"><vh>bugs/wishlist</vh>
@@ -168,14 +169,27 @@ tips: perform steps manually</t>
 <t tx="zaril.20110105110028">* SUMMARY
     INSTALL_SUID
 
+    don't let INSTALL_SUID or INSTALL_MODE be set in the environment
+
+        solutions
+            set it explicitly 
+                INSTALL_SUID =
+    
+            raise an error if it comes from the environment
+                $(if $(findstring environment, $(origin INSTALL_SUID)), $(error INSTALL_SUID set unsafely))
+    
 * TEST:
     port useraufs project
 
 * SCRATCH
 
-add pyproject-common to build-depends
+add pyproject-common to build-depends</t>
+<t tx="zaril.20110105122542">with PYPROJECT_MAKEFILE_INCLUDE_PATH?
 
-
+Q: where to install the support scripts?
+A:
+    /usr/share
+        for architecture independent data and executable scripts
 </t>
 </tnodes>
 </leo_file>

@@ -1,3 +1,3 @@
-PYPROJECT_MAKEFILE_INCLUDE_PATH ?= /usr/share/pyproject
-include $(PYPROJECT_MAKEFILE_INCLUDE_PATH)/pyproject.mk
+PYPROJECT_SHARE_PATH ?= /usr/share/pyproject
+include $(PYPROJECT_SHARE_PATH)/pyproject.mk
 

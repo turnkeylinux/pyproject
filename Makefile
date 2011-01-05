@@ -39,4 +39,7 @@ install:
 uninstall:
 	rm -rf $(PATH_INSTALL_SHARE)
 
+clean:
+	@echo nothing to clean
+
 .PHONY: init

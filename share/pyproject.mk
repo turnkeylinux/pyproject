@@ -20,6 +20,10 @@ PYCC_NODOC=python -OO $(PYTHON_LIB)/py_compile.py
 
 PATH_DIST := $(progname)-$(shell date +%F)
 
+# set explicitly to prevent INSTALL_SUID being set in the environment
+INSTALL_SUID = 
+INSTALL_FILE_MOD = $(if $(INSTALL_SUID), 4755, 755)
+
 all:
 	@echo "=== USAGE ==="
 	@echo 
@@ -97,8 +101,7 @@ _install: execproxy
 		fi; \
 	done
 	rm -f $(PATH_BIN)/$(progname)
-	install -m 755 _$(progname) $(PATH_BIN)/$(progname)
-#	install -m 4755 _$(progname) $(PATH_BIN)/$(progname) # install SUID 
+	install -m $(INSTALL_FILE_MOD) _$(progname) $(PATH_BIN)/$(progname)
 
 install-nodoc: pycompile-nodoc _install
 

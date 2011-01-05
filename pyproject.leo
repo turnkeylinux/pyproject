@@ -2,8 +2,8 @@
 <?xml-stylesheet ekr_test?>
 <leo_file>
 <leo_header file_format="2" tnodes="0" max_tnode_index="49" clone_windows="0"/>
-<globals body_outline_ratio="0.5">
-	<global_window_position top="0" left="453" height="933" width="816"/>
+<globals body_outline_ratio="0.110396570204">
+	<global_window_position top="0" left="569" height="933" width="700"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
 <preferences/>
@@ -12,13 +12,16 @@
 <v t="zaril.20101001195902" a="E"><vh>Project</vh>
 <v t="zaril.20101001200718" a="E"><vh>development log</vh>
 <v t="zaril.20110104133327" a="E"><vh>restructure pyproject to eliminate Makefile duplication</vh>
-<v t="zaril.20110105102854" a="TV"><vh>pyproject-common installation</vh></v>
+<v t="zaril.20110105105904" a="M"><vh>restructured pyproject initialization</vh></v>
+<v t="zaril.20110105102854" a="M"><vh>pyproject-common installation</vh></v>
+<v t="zaril.20110105105904.1" a="M"><vh>build pyproject-common</vh></v>
+<v t="zaril.20110105110028" a="ETV"><vh>suid support</vh></v>
 </v>
 </v>
 <v t="zaril.20101001200109.1" a="E"><vh>bugs/wishlist</vh>
 <v t="zaril.20110104133327.1"><vh>import pyproject.py from turnkey-pylib</vh></v>
 <v t="zaril.20110104133430"><vh>update documentation</vh></v>
-<v t="zaril.20110104133430.1"><vh>add support for external libraries</vh></v>
+<v t="zaril.20110104133430.1"><vh>add template support for external libraries</vh></v>
 <v t="zaril.20110105101835"><vh>set maintainer automatically at init?</vh></v>
 <v t="zaril.20110104133327.2"><vh>release v1.0</vh></v>
 </v>
@@ -34,7 +37,11 @@ basic design
     pyproject has two components
         pyproject-common: common infrastructure stuff
             (e.g., common Makefiles, external libraries, etc.)
-    
+
+        by default in /usr/share/pyproject
+            PYPROJECT_MAKEFILE_INCLUDE_PATH ?= ...
+                can be overrided to support testing of local installation
+
     the pyproject template
 
 ramification: two packages with the same version could have different contents
@@ -87,8 +94,6 @@ extend pyproject to be able to install *.mk fragments?
 use pyproject-common Makefile to install pyproject
     disable installation of pyproject software itself
 
-PYPROJECT_MAKEFILE_INCLUDE_PATH
-    if defined use that, otherwise use hardwired default
 
 * ROADMAP
 pyproject-specific Makefile until initialization
@@ -112,17 +117,6 @@ Makefile
     init
 
 * TEST:
-
-# 1
-cp -a pyproject test
-make init name=test
-
-tips: perform steps manually
-
-
-# 3 build pyproject-common
-
-
     </t>
 <t tx="zaril.20110104133327.1"></t>
 <t tx="zaril.20110104133327.2"></t>
@@ -142,7 +136,11 @@ example: useraufs module for other programs to interface with useraufs (without 
 </t>
 <t tx="zaril.20110105101835"></t>
 <t tx="zaril.20110105102854">* SUMMARY
+
 share/pyproject.mk
+
+PYPROJECT_MAKEFILE_INCLUDE_PATH
+    if defined use that, otherwise use hardwired default
 
 * TEST:
 
@@ -154,6 +152,28 @@ make install
 
 
 
+
+
+</t>
+<t tx="zaril.20110105105904">cp -a pyproject test
+make init name=test
+
+tips: perform steps manually</t>
+<t tx="zaril.20110105105904.1">TEST:
+    pool-register pyproject into a pool
+    get pyproject-common
+
+
+</t>
+<t tx="zaril.20110105110028">* SUMMARY
+    INSTALL_SUID
+
+* TEST:
+    port useraufs project
+
+* SCRATCH
+
+add pyproject-common to build-depends
 
 
 </t>

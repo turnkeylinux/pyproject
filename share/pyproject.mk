@@ -48,6 +48,7 @@ debug:
 	@true
 
 rename:
+	$(if $(name),,($(error 'name' not set)))
 	$(PYPROJECT_SHARE_PATH)/rename.sh $(progname) $(name)
 
 updatelinks:

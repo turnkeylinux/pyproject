@@ -47,6 +47,10 @@ endif
 	@echo "make updatelinks                # update toolkit command links"
 	@echo 
 
+debug:
+	$(foreach v, $V, $(warning $v = $($v)))
+	@true
+
 rename:
 ifeq ($(name),)
 	@echo error: name not set

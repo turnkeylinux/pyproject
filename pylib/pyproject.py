@@ -5,7 +5,7 @@ import re
 import sys
 import imp
 import getopt
-from executil import getoutput
+from executil import getoutput, ExecError
 
 def fatal(e):
     print >> sys.stderr, "fatal: " + str(e)
@@ -217,7 +217,9 @@ class CliWrapper:
 
         orig_cwd = os.getcwd()
 
-        os.chdir(cls.INSTALL_PATH)
+        if cls.INSTALL_PATH:
+            os.chdir(cls.INSTALL_PATH)
+            
         try:
             if not exists("debian/changelog"):
                 output = getoutput("autoversion HEAD")

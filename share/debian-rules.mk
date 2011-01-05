@@ -1,5 +1,9 @@
 #! /usr/bin/make -f
 
+### Variables:
+# set this to a non-empty string if you want to use the install-nodoc target
+# INSTALL_NODOC
+
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
@@ -16,8 +20,7 @@ clean:
 install: build
 	dh_clean -k
 	if [ -d docs ]; then dh_installdocs docs/; fi
-	$(MAKE) install prefix=$(prefix)
-	#$(MAKE) install-nodoc prefix=$(prefix)
+	$(if $(INSTALL_NODOC),$(MAKE) install-nodoc prefix=$(prefix),$(MAKE) install prefix=$(prefix))
 
 binary-indep: build install
 

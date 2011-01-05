@@ -46,4 +46,4 @@ uninstall:
 clean:
 	rm -rf build
 
-.PHONY: init
+.PHONY: help init install uninstall clean 

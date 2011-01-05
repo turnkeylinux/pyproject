@@ -122,3 +122,5 @@ gitdist: clean
 
 	tar jcvf $(PATH_DIST)-git.tar.bz2 $(PATH_DIST)-git
 	rm -rf $(PATH_DIST)-git
+
+.PHONY: gitdist dist clean install uninstall build updatelinks rename debug help

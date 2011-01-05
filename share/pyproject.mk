@@ -2,25 +2,25 @@ _self = $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 PYPROJECT_SHARE_PATH ?= $(shell dirname $(_self))
 
 # standard Python project Makefile
-progname=$(shell awk '/^Source/ {print $$2}' debian/control)
+progname = $(shell awk '/^Source/ {print $$2}' debian/control)
 name=
 
 prefix=/usr/local
-PATH_BIN=$(prefix)/bin
+PATH_BIN = $(prefix)/bin
 
 # WARNING: PATH_INSTALL is rm-rf'ed in uninstall
-PATH_INSTALL=$(prefix)/lib/$(progname)
-PATH_INSTALL_LIB=$(PATH_INSTALL)/pylib
-PATH_INSTALL_LIBEXEC=$(PATH_INSTALL)/libexec
-PATH_INSTALL_SHARE=$(prefix)/share/$(progname)
-PATH_INSTALL_CONTRIB=$(PATH_INSTALL_SHARE)/contrib
+PATH_INSTALL = $(prefix)/lib/$(progname)
+PATH_INSTALL_LIB = $(PATH_INSTALL)/pylib
+PATH_INSTALL_LIBEXEC = $(PATH_INSTALL)/libexec
+PATH_INSTALL_SHARE = $(prefix)/share/$(progname)
+PATH_INSTALL_CONTRIB = $(PATH_INSTALL_SHARE)/contrib
 
-TRUEPATH_INSTALL=$(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
+TRUEPATH_INSTALL = $(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
 
-PYTHON_LIB=$(shell echo /usr/lib/python* | sed 's/.* //')
+PYTHON_LIB = $(shell echo /usr/lib/python* | sed 's/.* //')
 
-PYCC_FLAGS=$(if $(INSTALL_NODOC),-OO,-O)
-PYCC=python $(PYCC_FLAGS) $(PYTHON_LIB)/py_compile.py
+PYCC_FLAGS = $(if $(INSTALL_NODOC),-OO,-O)
+PYCC = python $(PYCC_FLAGS) $(PYTHON_LIB)/py_compile.py
 
 PATH_DIST := $(progname)-$(shell date +%F)
 

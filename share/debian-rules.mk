@@ -10,6 +10,8 @@
 progname=$(shell awk '/^Source/ {print $$2}' debian/control)
 prefix=debian/$(progname)/usr
 
+export INSTALL_NODOC
+
 build:
 	mkdir -p $(prefix)
 
@@ -20,7 +22,7 @@ clean:
 install: build
 	dh_clean -k
 	if [ -d docs ]; then dh_installdocs docs/; fi
-	$(if $(INSTALL_NODOC),$(MAKE) install-nodoc prefix=$(prefix),$(MAKE) install prefix=$(prefix))
+	$(MAKE) install prefix=$(prefix)
 
 binary-indep: build install
 

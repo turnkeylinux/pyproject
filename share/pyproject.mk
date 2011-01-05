@@ -18,8 +18,9 @@ PATH_INSTALL_CONTRIB=$(PATH_INSTALL_SHARE)/contrib
 TRUEPATH_INSTALL=$(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
 
 PYTHON_LIB=$(shell echo /usr/lib/python* | sed 's/.* //')
-PYCC=python -O $(PYTHON_LIB)/py_compile.py
-PYCC_NODOC=python -OO $(PYTHON_LIB)/py_compile.py
+
+PYCC_FLAGS=$(if $(INSTALL_NODOC),-OO,-O)
+PYCC=python $(PYCC_FLAGS) $(PYTHON_LIB)/py_compile.py
 
 PATH_DIST := $(progname)-$(shell date +%F)
 
@@ -30,7 +31,6 @@ INSTALL_FILE_MOD = $(if $(INSTALL_SUID), 4755, 755)
 all:
 	@echo "=== USAGE ==="
 	@echo 
-	@echo "make install-nodoc prefix=<dirpath>   # strip docstrings and install"
 	@echo "make install prefix=<dirpath>"
 	@echo "         (default prefix $(prefix))"
 	@echo "make uninstall prefix=<dirpath>"
@@ -56,15 +56,12 @@ updatelinks:
 	@echo done.
 	@echo
 
-pycompile:
-	$(PYCC) pylib/*.py *.py
-
-pycompile-nodoc:
-	$(PYCC_NODOC) pylib/*.py *.py
-
 execproxy: execproxy.c
 	gcc execproxy.c -DMODULE_PATH=\"$(TRUEPATH_INSTALL)/wrapper.pyo\" -o _$(progname)
 	strip _$(progname)
+
+build: execproxy
+	$(PYCC) pylib/*.py *.py
 
 uninstall:
 	rm -rf $(PATH_INSTALL)
@@ -74,7 +71,7 @@ uninstall:
 	# delete links from PATH_BIN
 	for f in $(progname)-*; do rm -f $(PATH_BIN)/$$f; done
 
-_install: execproxy
+install: build
 	@echo
 	@echo \*\* CONFIG: prefix = $(prefix) \*\*
 	@echo 
@@ -101,10 +98,6 @@ _install: execproxy
 	done
 	rm -f $(PATH_BIN)/$(progname)
 	install -m $(INSTALL_FILE_MOD) _$(progname) $(PATH_BIN)/$(progname)
-
-install-nodoc: pycompile-nodoc _install
-
-install: pycompile  _install
 
 clean:
 	rm -f pylib/*.pyc pylib/*.pyo *.pyc *.pyo _$(progname)

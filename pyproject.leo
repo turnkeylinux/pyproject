@@ -17,11 +17,14 @@
 <v t="zaril.20110105105904.1" a="M"><vh>build pyproject-common</vh></v>
 <v t="zaril.20110105110028" a="M"><vh>suid support</vh></v>
 <v t="zaril.20110105122542" a="M"><vh>globalize support scripts</vh></v>
-<v t="zaril.20110104133327.1"><vh>import pyproject.py from turnkey-pylib</vh></v>
+<v t="zaril.20110104133327.1" a="M"><vh>import pyproject.py from turnkey-pylib</vh></v>
+<v t="zaril.20110105131729" a="ETV"><vh>centralized debian/rules</vh>
+<v t="zaril.20110105150653"><vh>options</vh></v>
+</v>
 </v>
 </v>
 <v t="zaril.20101001200109.1" a="E"><vh>bugs/wishlist</vh>
-<v t="zaril.20110105131729" a="TV"><vh>globalize debian-rules</vh></v>
+<v t="zaril.20110105150435"><vh>port all pyprojects</vh></v>
 <v t="zaril.20110104133430"><vh>update documentation</vh></v>
 <v t="zaril.20110104133430.1"><vh>add template support for external libraries</vh></v>
 <v t="zaril.20110105101835"><vh>set maintainer automatically at init?</vh></v>
@@ -192,6 +195,19 @@ A:
     /usr/share
         for architecture independent data and executable scripts
 </t>
-<t tx="zaril.20110105131729"></t>
+<t tx="zaril.20110105131729">debian-rules.mk
+
+</t>
+<t tx="zaril.20110105150435">rm -rf scripts
+replace Makefile
+
+
+
+write email to alon explaining how to port his packages
+
+</t>
+<t tx="zaril.20110105150653">no documentation
+verboseness
+</t>
 </tnodes>
 </leo_file>

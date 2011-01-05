@@ -15,7 +15,7 @@ help:
 	@echo '  install [ prefix=path/to/usr ]         # default: prefix=$(value prefix)'
 
 init: PYPROJECT_SHARE_PATH ?= /usr/share/pyproject
-init:
+init: clean
 
 ifeq ($(shell basename $(shell pwd)),pyproject)
 	$(error won't initialize pyproject in-place)

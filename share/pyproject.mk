@@ -5,7 +5,7 @@ PYPROJECT_SHARE_PATH ?= $(shell dirname $(_self))
 progname = $(shell awk '/^Source/ {print $$2}' debian/control)
 name=
 
-prefix=/usr/local
+prefix = /usr/local
 PATH_BIN = $(prefix)/bin
 
 # WARNING: PATH_INSTALL is rm-rf'ed in uninstall
@@ -31,19 +31,22 @@ INSTALL_FILE_MOD = $(if $(INSTALL_SUID), 4755, 755)
 all: help
 
 help:
-	@echo "=== USAGE ==="
-	@echo 
-	@echo "make install prefix=<dirpath>"
-	@echo "         (default prefix $(prefix))"
-	@echo "make uninstall prefix=<dirpath>"
+	@echo '=== Configuration variables:'
+	@echo 'INSTALL_SUID   # if not empty string, install program suid'
+	@echo 'INSTALL_NODOC  # if not empty string, compile without docstrings'
 	@echo
-	@echo "make clean"
-	@echo "make dist                       # create distribution tarball"
-	@echo "make gitdist                    # create git distribution tarball"
+
+	@echo '=== Targets:'
+	@echo 'install   [ prefix=path/to/usr ] # default: prefix=$(value prefix)'
+	@echo 'uninstall [ prefix=path/to/usr ]'
 	@echo
-	@echo "make rename name=<project-name> # initialize project"
-	@echo "make updatelinks                # update toolkit command links"
-	@echo 
+	@echo 'updatelinks                      # update toolkit wrapper links'
+	@echo
+	@echo 'rename name=<newname>'
+	@echo 'clean'
+	@echo
+	@echo 'dist                             # create distribution tarball'
+	@echo 'gitdist                          # create git distribution tarball'
 
 debug:
 	$(foreach v, $V, $(warning $v = $($v)))

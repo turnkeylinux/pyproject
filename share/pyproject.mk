@@ -39,11 +39,7 @@ all:
 	@echo "make dist                       # create distribution tarball"
 	@echo "make gitdist                    # create git distribution tarball"
 	@echo
-ifeq ($(progname),pyproject)
-	@echo "make init name=<project-name>   # initialize project"
-else
 	@echo "make rename name=<project-name> # initialize project"
-endif
 	@echo "make updatelinks                # update toolkit command links"
 	@echo 
 
@@ -52,11 +48,7 @@ debug:
 	@true
 
 rename:
-ifeq ($(name),)
-	@echo error: name not set
-else
 	$(PYPROJECT_SHARE_PATH)/rename.sh $(progname) $(name)
-endif
 
 updatelinks:
 	@echo -n updating links... " "

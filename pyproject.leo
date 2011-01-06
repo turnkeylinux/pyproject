@@ -2,8 +2,8 @@
 <?xml-stylesheet ekr_test?>
 <leo_file>
 <leo_header file_format="2" tnodes="0" max_tnode_index="49" clone_windows="0"/>
-<globals body_outline_ratio="0.363344051447">
-	<global_window_position top="0" left="570" height="933" width="700"/>
+<globals body_outline_ratio="0.45551982851">
+	<global_window_position top="0" left="174" height="933" width="700"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
 <preferences/>
@@ -24,9 +24,12 @@
 <v t="zaril.20110105150653"><vh>options</vh></v>
 </v>
 <v t="zaril.20110105174253" a="M"><vh>add debug target to pyproject.mk</vh></v>
-<v t="zaril.20110105175348" a="MTV"><vh>refactor pyproject.mk</vh></v>
+<v t="zaril.20110105175348" a="M"><vh>refactor pyproject.mk</vh></v>
 <v t="zaril.20110105223455" a="M"><vh>add inheritable hooking mechanism</vh></v>
-<v t="zaril.20110105150435" a="E"><vh>port all pyprojects</vh></v>
+<v t="zaril.20110105150435" a="EMTV"><vh>port all pyprojects</vh></v>
+<v t="zaril.20110106083604" a="EM"><vh>make share/debian-rules.mk extendable</vh>
+<v t="zaril.20110106091356" a="M"><vh>bug: builds twice</vh></v>
+</v>
 </v>
 </v>
 <v t="zaril.20101001200109.1" a="E"><vh>bugs/wishlist</vh>
@@ -224,17 +227,33 @@ extend apt so it know
 
 
 </t>
-<t tx="zaril.20110105150435">rm -rf scripts
-replace Makefile
-add pyproject-common to build depends and depends
-
-
-ectoplasm is a special case
+<t tx="zaril.20110105150435">ectoplasm is a special case
     review Alon's patch to see how he handled it
 
 write email to alon explaining how to port his packages
 
-</t>
+HOWTO:
+    cd projects
+    echo 'porting to pyproject 1.0' &gt; msg
+    
+    # foreach project
+    
+    cd yourproject
+    
+    git-rm -r scripts/;
+    
+    # if your old Makefile does something non-standard you'll need to use
+    # the extension mechanism (more about that later)
+    cp /turnkey/projects/pyproject/template/Makefile ./
+    cp /turnkey/projects/pyproject/template/debian/rules debian/rules
+    
+    # add pyproject-common to the build-depends and depends
+    # remove dependencies on debhelper, turnkey-pylib and python 
+    # (pyproject-common takes care of that)
+    editor debian/control
+    
+    git-commit -a -v -F ../msg -e
+        </t>
 <t tx="zaril.20110105150653">no documentation
 
 INSTALL_NODOC
@@ -271,5 +290,26 @@ override after
     target/deps
     target/body
     </t>
+<t tx="zaril.20110106083604">extendable_targets = build build-arch build-indep binary
+
+* RESOURCE: Debian Policy Manual 4.9 (Main building script)
+
+build
+    not invoked as root
+
+    build-arch build-indep (optional)
+        build routines for creating architecture specific and architecture non-specific packages
+    
+binary binary-arch binary-indep
+    invoked as root (or fakeroot)
+
+clean
+    undo effects of build
+
+* DESIGN
+
+EXTENDABLE_TARGETS = build clean binary-indep binary-arch</t>
+<t tx="zaril.20110106091356">build was duplicated 3 times
+</t>
 </tnodes>
 </leo_file>

@@ -10,6 +10,11 @@ Python turnkey toolkit template, with two example commands
 FEATURES
 --------
 
+* leverage common infrastructure (pyproject-common):
+pyproject.py Python module for wrapper cli
+shared base Makefiles
+shred utility scripts
+
 * integrated help support
 (e.g., command docstrings are automatically interpreted by wrapper)
 
@@ -24,9 +29,7 @@ the sourceless python program is executed through a binary execution proxy
 		clears LD_* variables
 		sets PATH, CDPATH, IFS to good values
 
-* intergrated packaging support
-debian/* will be updated when the project is initialized and/or renamed.
-at a minimum, the control file needs a description of the project.
+* debian packaging support
 
 * flexible toolkit execution syntax
 # lists available commands
@@ -44,7 +47,6 @@ automatically sets up pylib into your python path
 automatically sets up libexec into your PATH
 
 * versioning support
-
 Looks for version in the following places (by order):
 1) <INSTALL_PATH>/version.txt (if it exists)
 2) debian/changelog (if it exists - parsed with dpkg-parsechangelog)
@@ -64,30 +66,31 @@ project-subcommand --debug args..
 USAGE
 -----
 
+* initialization:
+cp -a pyproject newproject
+cd newproject && make init
+
+* update packaging files
+	eg. debian/control with descriptions and dependencies
+
 * remove example dummy commands?
 	pylib/cmd_printargs.py
 	pylib/cmd_prog.py
 
-* initialize project?
-	make init name=newname
-
-* update packaging files
-	eg. debian/control with depend's and descriptions
-	note: see "projectbuilding" for more information
-
 * add programs to the toolkit as pylib/cmd_<subcmd>.py
 
-* update links
+* Makefile help usage
+	make || make help
+
+* update links (when you have added or removed commands)
 	make updatelinks
 
 Remember, you can run toolkit commands like this:
-
 	pylib/cmd_<subcmd>.py arg1 arg2 ...
 	<progname>-<subcmd> arg1 arg2 ...
 	<progname> <subcmd> arg1 arg2 ...
 
 * documentation / integrated help
-
 Usage:
 <progname> # prints high level overview of programs + help
 <progname>-<command> -h # extended help
@@ -106,17 +109,42 @@ def usage():
 Advanced:
 Normally, the order of the commands printed by <progname> is
 determined by their sort order. If you want to manually tweak with
-the order, then list the desired order in COMMANDS_USAGE_ORDER.
+the order, then list the desired order in
+wrapper.CliWrapper.COMMANDS_USAGE_ORDER.
 
 Empty string values COMMANDS_USAGE_ORDER symbolize empty lines/seperators.
 
 * install
-
 make install prefix=...  # prefix defaults to /usr/local
 
 * uninstall
-
 make uninstall		# prefix defaults to /usr/local
+
+* advanced Makefile configuration
+The inherited base Makefiles are designed to be configurable
+and extendable with define based hooks.
+
+In addition to setting the values of configurable variables
+such as INSTALL_SUID or INSALL_NODOC, the following targets are
+designed to be fully configurable and extendable:
+
+EXTENDABLE_TARGETS = help build install uninstall clean
+
+Extendable targets are special in that their behavior can be
+extended and overridden by altering the following definitions,
+after including the shared pyproject.mk.
+
+<target>/pre  # rules before default body (default: empty)
+<target>/body # body of rules (default: defined, but can be overridden)
+<target>/post # rules after default body (default: empty)
+
+<targets>/deps/extra # extra dependencies for rule (default: empty)
+
+Special case - if you want to override the built in dependencies 
+for a target, you'll need to define the following BEFORE including
+pyproject.mk:
+
+<target>/deps # default dependencies for rule 
 
 * tag the latest commit as a versioned release:
 
@@ -125,3 +153,4 @@ make uninstall		# prefix defaults to /usr/local
 git-tag -s v1.0.1
 
 (if available, use of git-tag-release is recommended)
+

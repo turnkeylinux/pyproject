@@ -1,0 +1,85 @@
+v1.0 Release Notes
+==================
+
+* first release, following major redesign that broke pyproject
+into two distinct parts which were previously intertwined:
+1) pyproject-common: where all the common infrastructure lives (I.e., installed
+into /usr/share/pyproject)
+2) the template: from which new projects are initialized
+
+In principle, we should have all common logic in one centralized place
+so that changes (e.g., bugs and new features) only need to be
+implemented once rather than over and over again in each project. This
+way all pyproject descendants can benefit from improvements to the
+common infrastructure "free of charge". Classic example of how you
+achieve leverage / force multiplication.
+
+=== Basic usage
+
+$ cp -a pyproject newproject
+$ cd newproject
+$ make       # help menu
+$ make init  # name is set to newproject by default
+
+# after-initialization
+$ make       # new help
+
+=== Makefile extension mechanism
+
+I've done some research and developed a generic extension mechanism for
+Makefiles that is very flexible easier to use than the mechanism cdbs is built on.
+
+pyproject-common's Makefiles (debian-rules.mk and debian-rules.mk)
+are designed to be configurable and extendable with `define' based hooks:
+
+        <target>/pre  # rules before default body (default: empty)
+        <target>/body # body of rules (default: defined, but can be overridden)
+        <target>/post # rules after default body (default: empty)
+
+        <targets>/deps/extra # extra dependencies for rule (default: empty)
+
+Special case - if you want to override the built in dependencies
+for a target, you'll need to define the following BEFORE including
+the Makefile:
+        <target>/deps # default dependencies for rule
+
+Most pyprojects don't need to extend the default Makefiles, but extending and
+overriding default behavior is occasionally needed to satisfy special use cases
+ (e.g., connagent and opus).
+
+For example:
+
+$ cd opus
+$ cat Makefile
+PYPROJECT_SHARE_PATH ?= /usr/share/pyproject
+include $(PYPROJECT_SHARE_PATH)/pyproject.mk
+
+PATH_INSTALL_TEMPLATES = $(PATH_INSTALL)/templates
+
+define help/post
+        @echo
+        @echo "templates                        # make templates/generated"
+endef
+
+templates:
+        cd templates && ./generate.py
+
+build/deps/extra = templates
+
+define install/post
+        install -d $(PATH_INSTALL_TEMPLATES)
+        cp -a templates/generated $(PATH_INSTALL_TEMPLATES)
+endef
+
+.PHONY: templates
+
+=== Makefile API
+
+pyproject.mk:
+        INSTALL_SUID   # if not empty string, install program suid
+        INSTALL_NODOC  # if not empty string, compile without docstrings
+
+        EXTENDABLE_TARGETS = help build install uninstall clean
+
+debian-rules.mk:
+        EXTENDABLE_TARGETS = build clean binary-indep binary-arch install

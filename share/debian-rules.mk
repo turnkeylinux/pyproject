@@ -12,26 +12,39 @@ prefix=debian/$(progname)/usr
 
 export INSTALL_NODOC
 
-build:
+binary: binary-indep binary-arch
+
+define build/body
 	mkdir -p $(prefix)
 	dh_clean -k
 	if [ -d docs ]; then dh_installdocs docs/; fi
 	$(MAKE) install prefix=$(prefix)
+endef
 
-clean:
+define clean/body
 	$(MAKE) clean
 	dh_clean
+endef
 
-binary-indep:
-
-binary-arch: build
+binary-arch/deps ?= build
+define binary-arch/body
 	dh_testdir
 	dh_testroot
 	dh_installdeb -a
 	dh_gencontrol -a
 	dh_md5sums -a
 	dh_builddeb -a
+endef
 
-binary: binary-indep binary-arch
+# construct target rules
+define extendable_target
+$1: $$($1/deps) $$($1/deps/extra)
+	$$($1/pre)
+	$$($1/body)
+	$$($1/post)
+endef
+EXTENDABLE_TARGETS = build clean binary-indep binary-arch
+
+$(foreach target,$(EXTENDABLE_TARGETS),$(eval $(call extendable_target,$(target))))
 
 .PHONY: build clean binary-indep binary-arch binary

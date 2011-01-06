@@ -14,19 +14,17 @@ export INSTALL_NODOC
 
 build:
 	mkdir -p $(prefix)
+	dh_clean -k
+	if [ -d docs ]; then dh_installdocs docs/; fi
+	$(MAKE) install prefix=$(prefix)
 
 clean:
 	$(MAKE) clean
 	dh_clean
 
-install: build
-	dh_clean -k
-	if [ -d docs ]; then dh_installdocs docs/; fi
-	$(MAKE) install prefix=$(prefix)
+binary-indep: build
 
-binary-indep: build install
-
-binary-arch: build install
+binary-arch: build
 	dh_testdir
 	dh_testroot
 	dh_installdeb -a
@@ -35,4 +33,5 @@ binary-arch: build install
 	dh_builddeb -a
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+
+.PHONY: build clean binary-indep binary-arch binary

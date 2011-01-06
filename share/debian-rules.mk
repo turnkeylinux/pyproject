@@ -10,7 +10,7 @@
 progname=$(shell awk '/^Source/ {print $$2}' debian/control)
 prefix=debian/$(progname)/usr
 
-EXTENDABLE_TARGETS = build clean binary-indep binary-arch
+EXTENDABLE_TARGETS = build clean binary-indep binary-arch install
 
 export INSTALL_NODOC
 
@@ -18,6 +18,10 @@ binary: binary-indep binary-arch
 
 define build/body
 	mkdir -p $(prefix)
+endef
+
+install/deps ?= build
+define install/body
 	dh_clean -k
 	if [ -d docs ]; then dh_installdocs docs/; fi
 	$(MAKE) install prefix=$(prefix)
@@ -29,7 +33,7 @@ define clean/body
 	rm -f $(EXTENDABLE_TARGETS)
 endef
 
-binary-arch/deps ?= build
+binary-arch/deps ?= build install
 define binary-arch/body
 	dh_testdir
 	dh_testroot

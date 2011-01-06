@@ -120,32 +120,6 @@ make install prefix=...  # prefix defaults to /usr/local
 * uninstall
 make uninstall		# prefix defaults to /usr/local
 
-* advanced Makefile configuration
-The inherited base Makefiles are designed to be configurable
-and extendable with define based hooks.
-
-In addition to setting the values of configurable variables
-such as INSTALL_SUID or INSALL_NODOC, the following targets are
-designed to be fully configurable and extendable:
-
-EXTENDABLE_TARGETS = help build install uninstall clean
-
-Extendable targets are special in that their behavior can be
-extended and overridden by altering the following definitions,
-after including the shared pyproject.mk.
-
-<target>/pre  # rules before default body (default: empty)
-<target>/body # body of rules (default: defined, but can be overridden)
-<target>/post # rules after default body (default: empty)
-
-<targets>/deps/extra # extra dependencies for rule (default: empty)
-
-Special case - if you want to override the built in dependencies 
-for a target, you'll need to define the following BEFORE including
-pyproject.mk:
-
-<target>/deps # default dependencies for rule 
-
 * tag the latest commit as a versioned release:
 
 # this will ask you for a tag message (which may include release notes)
@@ -153,4 +127,59 @@ pyproject.mk:
 git-tag -s v1.0.1
 
 (if available, use of git-tag-release is recommended)
+
+=== Makefile extension mechanism
+
+pyproject-common's Makefiles (debian-rules.mk and debian-rules.mk)
+are designed to be configurable and extendable with `define' based hooks:
+
+        <target>/pre  # rules before default body (default: empty)
+        <target>/body # body of rules (default: defined, but can be overridden)
+        <target>/post # rules after default body (default: empty)
+
+        <targets>/deps/extra # extra dependencies for rule (default: empty)
+
+Special case - if you want to override the built in dependencies
+for a target, you'll need to define the following BEFORE including
+the Makefile:
+        <target>/deps # default dependencies for rule
+
+Most pyprojects don't need to extend the default Makefiles, but extending and overriding default behavior is occasionally needed to satisfy special use cases  (e.g., connagent and opus).
+
+For example:
+
+$ cd opus
+$ cat Makefile
+PYPROJECT_SHARE_PATH ?= /usr/share/pyproject
+include $(PYPROJECT_SHARE_PATH)/pyproject.mk
+
+PATH_INSTALL_TEMPLATES = $(PATH_INSTALL)/templates
+
+define help/post
+        @echo
+        @echo "templates                        # make templates/generated"
+endef
+
+templates:
+        cd templates && ./generate.py
+
+build/deps/extra = templates
+
+define install/post
+        install -d $(PATH_INSTALL_TEMPLATES)
+        cp -a templates/generated $(PATH_INSTALL_TEMPLATES)
+endef
+
+.PHONY: templates
+
+=== Makefile API
+
+pyproject.mk:
+        INSTALL_SUID   # if not empty string, install program suid
+        INSTALL_NODOC  # if not empty string, compile without docstrings
+
+        EXTENDABLE_TARGETS = help build install uninstall clean
+
+debian-rules.mk:
+        EXTENDABLE_TARGETS = build clean binary-indep binary-arch
 

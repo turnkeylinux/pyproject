@@ -22,7 +22,7 @@ clean:
 	$(MAKE) clean
 	dh_clean
 
-binary-indep: build
+binary-indep:
 
 binary-arch: build
 	dh_testdir

@@ -10,6 +10,8 @@
 progname=$(shell awk '/^Source/ {print $$2}' debian/control)
 prefix=debian/$(progname)/usr
 
+EXTENDABLE_TARGETS = build clean binary-indep binary-arch
+
 export INSTALL_NODOC
 
 binary: binary-indep binary-arch
@@ -24,6 +26,7 @@ endef
 define clean/body
 	$(MAKE) clean
 	dh_clean
+	rm -f $(EXTENDABLE_TARGETS)
 endef
 
 binary-arch/deps ?= build
@@ -42,9 +45,8 @@ $1: $$($1/deps) $$($1/deps/extra)
 	$$($1/pre)
 	$$($1/body)
 	$$($1/post)
+	touch $$@
 endef
-EXTENDABLE_TARGETS = build clean binary-indep binary-arch
-
 $(foreach target,$(EXTENDABLE_TARGETS),$(eval $(call extendable_target,$(target))))
 
-.PHONY: build clean binary-indep binary-arch binary
+.PHONY: clean

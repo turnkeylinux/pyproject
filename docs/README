@@ -137,11 +137,10 @@ are designed to be configurable and extendable with `define' based hooks:
         <target>/body # body of rules (default: defined, but can be overridden)
         <target>/post # rules after default body (default: empty)
 
-        <targets>/deps/extra # extra dependencies for rule (default: empty)
-
-Special case - if you want to override the built in dependencies
+Special case - if you want to extend or override the built in dependencies
 for a target, you'll need to define the following BEFORE including
 the Makefile:
+        <targets>/deps/extra # extra dependencies for rule (default: empty)
         <target>/deps # default dependencies for rule
 
 Most pyprojects don't need to extend the default Makefiles, but extending and overriding default behavior is occasionally needed to satisfy special use cases  (e.g., connagent and opus).

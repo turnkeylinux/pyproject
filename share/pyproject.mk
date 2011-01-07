@@ -56,7 +56,7 @@ rename:
 
 updatelinks:
 	@echo -n updating links... " "
-	@$(PYPROJECT_SHARE_PATH)/updatelinks.sh
+	@$(PYPROJECT_SHARE_PATH)/updatelinks.sh $(progname)
 	@echo done.
 	@echo
 

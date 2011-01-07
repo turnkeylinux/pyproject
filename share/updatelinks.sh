@@ -3,13 +3,18 @@
 set -e
 set +v
 
+if [[ $# != 1 ]]; then
+    echo syntax: $0 progname
+    exit 1
+fi
+
+progname=$1
+
 if [ -d .git ]; then
     git=true
 else
     git=false
 fi
-
-progname=$(awk '/^Source/ {print $2}' debian/control)
 
 for oldlink in $(find -maxdepth 1 -type l); do
     if [ "$git" == "true" ]; then

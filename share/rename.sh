@@ -14,4 +14,4 @@ sed -i -e "s/^Source:.*/Source: $newname/; \
            s/^Maintainer:.*/Maintainer: $GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>/" debian/control
 
 [ -f ${oldname}.leo ] && mv ${oldname}.leo ${newname}.leo
-$(dirname $0)/updatelinks.sh
+$(dirname $0)/updatelinks.sh $newname

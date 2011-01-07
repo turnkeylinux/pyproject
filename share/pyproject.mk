@@ -78,7 +78,7 @@ define help/body
 	@echo 'install   [ prefix=path/to/usr ] # default: prefix=$(value prefix)'
 	@echo 'uninstall [ prefix=path/to/usr ]'
 	@echo
-	@echo 'updatelinks                      # update toolkit wrapper links'
+	@echo 'updatelinks [ progname=name ]    # update toolkit wrapper links'
 	@echo
 	@echo 'rename name=<newname>'
 	@echo 'clean'

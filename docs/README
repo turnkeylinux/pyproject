@@ -131,27 +131,30 @@ git-tag -s v1.0.1
 === Makefile extension mechanism
 
 pyproject-common's Makefiles (debian-rules.mk and debian-rules.mk)
-are designed to be configurable and extendable with `define' based hooks:
+are designed to be configurable and extendable with `define' based hooks
+which are set BEFORE including the shared Makefile because target
+prerequisites are evaluated at include time:
 
         <target>/pre  # rules before default body (default: empty)
-        <target>/body # body of rules (default: defined, but can be overridden)
         <target>/post # rules after default body (default: empty)
 
-Special case - if you want to extend or override the built in dependencies
-for a target, you'll need to define the following BEFORE including
-the Makefile:
-        <targets>/deps/extra # extra dependencies for rule (default: empty)
-        <target>/deps # default dependencies for rule
+        <target>/deps # override default dependencies for a rule
+        <target>/deps/extra # extra dependencies for rule (default: empty)
 
-Most pyprojects don't need to extend the default Makefiles, but extending and overriding default behavior is occasionally needed to satisfy special use cases  (e.g., connagent and opus).
+Special case - if you want to override built in built-in rules for a target,
+you'll need to define them AFTER including the shared Makefile
+        <target>/body # body of rules (default: defined, but can be overridden)
+
+To override built-in variables you'll need to define them AFTER the include.
+
+Most pyprojects don't need to extend the default Makefiles, but
+extending and overriding default behavior is occasionally needed to
+satisfy special use cases (e.g., connagent and opus).
 
 For example:
 
 $ cd opus
 $ cat Makefile
-PYPROJECT_SHARE_PATH ?= /usr/share/pyproject
-include $(PYPROJECT_SHARE_PATH)/pyproject.mk
-
 PATH_INSTALL_TEMPLATES = $(PATH_INSTALL)/templates
 
 define help/post
@@ -170,6 +173,9 @@ define install/post
 endef
 
 .PHONY: templates
+
+PYPROJECT_SHARE_PATH ?= /usr/share/pyproject
+include $(PYPROJECT_SHARE_PATH)/pyproject.mk
 
 === Makefile API
 

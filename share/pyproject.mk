@@ -103,8 +103,7 @@ define install/body
 	install -d $(PATH_BIN) $(PATH_INSTALL) $(PATH_INSTALL_LIB) $(PATH_INSTALL_LIBEXEC)
 
 	# if contrib exists
-	contrib=$(wildcard contrib/*); \
-	if [ "$$contrib" ]; then \
+	if [ "$(wildcard contrib/*)" ]; then \
 		mkdir -p $(PATH_INSTALL_CONTRIB); \
 		cp -a contrib/* $(PATH_INSTALL_CONTRIB); \
 	fi

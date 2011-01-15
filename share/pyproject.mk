@@ -10,6 +10,8 @@ PATH_BIN = $(prefix)/bin
 
 # WARNING: PATH_INSTALL is rm-rf'ed in uninstall
 PATH_INSTALL = $(prefix)/lib/$(progname)
+REAL_PATH_INSTALL = $(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
+
 PATH_INSTALL_LIB = $(PATH_INSTALL)/pylib
 PATH_INSTALL_LIBEXEC = $(PATH_INSTALL)/libexec
 PATH_INSTALL_SHARE = $(prefix)/share/$(progname)
@@ -60,9 +62,8 @@ updatelinks:
 	@echo done.
 	@echo
 
-execproxy: TRUEPATH_INSTALL = $(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
 execproxy: execproxy.c
-	gcc execproxy.c -DMODULE_PATH=\"$(TRUEPATH_INSTALL)/wrapper.pyo\" -o _$(progname)
+	gcc execproxy.c -DMODULE_PATH=\"$(REAL_PATH_INSTALL)/wrapper.pyo\" -o _$(progname)
 	strip _$(progname)
 
 ### Extendable targets

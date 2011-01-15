@@ -5,12 +5,13 @@ PYPROJECT_SHARE_PATH ?= $(shell dirname $(_self))
 progname = $(shell awk '/^Source/ {print $$2}' debian/control)
 name=
 
+truepath = $(shell echo $1 | sed -e 's/^debian\/$(progname)//')
+
 prefix = /usr/local
 PATH_BIN = $(prefix)/bin
 
 # WARNING: PATH_INSTALL is rm-rf'ed in uninstall
 PATH_INSTALL = $(prefix)/lib/$(progname)
-REAL_PATH_INSTALL = $(shell echo $(PATH_INSTALL) | sed -e 's/debian\/$(progname)//g')
 
 PATH_INSTALL_LIB = $(PATH_INSTALL)/pylib
 PATH_INSTALL_LIBEXEC = $(PATH_INSTALL)/libexec
@@ -63,7 +64,7 @@ updatelinks:
 	@echo
 
 execproxy: execproxy.c
-	gcc execproxy.c -DMODULE_PATH=\"$(REAL_PATH_INSTALL)/wrapper.pyo\" -o _$(progname)
+	gcc execproxy.c -DMODULE_PATH=\"$(call truepath,$(PATH_INSTALL))/wrapper.pyo\" -o _$(progname)
 	strip _$(progname)
 
 ### Extendable targets

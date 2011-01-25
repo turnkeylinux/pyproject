@@ -37,6 +37,7 @@ binary-arch/deps ?= build install
 define binary-arch/body
 	dh_testdir
 	dh_testroot
+	dh_installdocs
 	dh_installdeb -a
 	dh_gencontrol -a
 	dh_md5sums -a

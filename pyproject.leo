@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet ekr_test?>
 <leo_file>
-<leo_header file_format="2" tnodes="0" max_tnode_index="49" clone_windows="0"/>
+<leo_header file_format="2" tnodes="0" max_tnode_index="50" clone_windows="0"/>
 <globals body_outline_ratio="0.45551982851">
-	<global_window_position top="0" left="174" height="933" width="700"/>
+	<global_window_position top="0" left="570" height="933" width="700"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
 <preferences/>
@@ -11,6 +11,7 @@
 <vnodes>
 <v t="zaril.20101001195902" a="E"><vh>Project</vh>
 <v t="zaril.20101001200718" a="E"><vh>development log</vh>
+<v t="zaril.20110127054552" a="TV"><vh>modify pyproject to support suid Python scripts</vh></v>
 <v t="zaril.20110104133327" a="E"><vh>restructure pyproject to eliminate Makefile duplication</vh>
 <v t="zaril.20110105105904" a="M"><vh>restructured pyproject initialization</vh></v>
 <v t="zaril.20110105102854" a="M"><vh>pyproject-common installation</vh></v>
@@ -26,7 +27,7 @@
 <v t="zaril.20110105174253" a="M"><vh>add debug target to pyproject.mk</vh></v>
 <v t="zaril.20110105175348" a="M"><vh>refactor pyproject.mk</vh></v>
 <v t="zaril.20110105223455" a="M"><vh>add inheritable hooking mechanism</vh></v>
-<v t="zaril.20110105150435" a="EMTV"><vh>port all pyprojects</vh></v>
+<v t="zaril.20110105150435" a="EM"><vh>port all pyprojects</vh></v>
 <v t="zaril.20110106083604" a="EM"><vh>make share/debian-rules.mk extendable</vh>
 <v t="zaril.20110106091356" a="M"><vh>bug: builds twice</vh></v>
 </v>
@@ -311,5 +312,81 @@ clean
 EXTENDABLE_TARGETS = build clean binary-indep binary-arch</t>
 <t tx="zaril.20110106091356">build was duplicated 3 times
 </t>
+<t tx="zaril.20110127054552">install execproxy suid
+    
+add "make suidinit target?"
+    no, if you want to make a suid program, you better know what to do
+        add commented Makefile target
+
+execproxy, sanitizes environment if run suid:
+    look at setuid-wrapper in Python distribution
+
+    set safe PATH
+        /sbin:/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+
+    unset PATH
+        force program to set PATH explicitly?
+
+    sanitize PATH of any directories not owned by root?
+        we would also have to check with parents, etc.
+            
+    IFS
+    ENV
+    LD_*
+    PYTHON*        
+    CDPATH
+    
+    set umask
+        to 077 or 022 if you want files to be readable
+
+Q: what's euid for a suid program?
+A: the owner of the suid program
+
+E: test that clean_environ really does its job
+R: it does
+    DISCOVERY: the Linux kernel filters LD_PRELOAD for suid files
+    clean_environ never gets a chance to filter LD_PRELOAD
+        but it does filter LD_PRELOAD_FOO, or whatever
+            because it filters any environment variable beginning with LD_
+
+IDEA: ipython as an interactive exploration/testing environment for suid test
+
+    GOTCHA: system("ipython") won't work -&gt; os.geteuid == os.getuid()
+        DISCOVERY: bash shell cancels suid effect (sets real uid to uid)
+            this means you can't use system to execute a command as suid root
+        SOLUTION: execl("/usr/bin/ipython", "ipython",  NULL);    
+
+HYPO: maybe the shell is screwing with my euid credentials?
+
+Q: how do I drop privileges in a suid python program?
+A: 
+    either
+        os.setuid(os.getuid())
+            loose privileges permanently
+
+            equivalent to: os.setreuid(os.getuid(), os.getuid())
+
+        os.seteuid(os.getuid())
+            drop privileges temporarily
+            can still regain privileges by executing os.seteuid(0)
+    
+    a fuller version - rom connagent/pylib/popen4.py
+    
+        def _drop_privileges(self, user):
+            pwent = pwd.getpwnam(user)
+            uid, gid, home = pwent[2], pwent[3], pwent[5]
+            del os.environ["XAUTHORITY"]
+            os.environ["USER"] = user
+            os.environ["HOME"] = home
+    
+            usergroups = []
+            groups = grp.getgrall()
+            for group in groups:
+                if user in group[3]:
+                    usergroups.append(group[2])
+            
+            os.setgroups(usergroups)
+            os.setgid(gid)
+            os.setuid(uid)</t>
 </tnodes>
 </leo_file>

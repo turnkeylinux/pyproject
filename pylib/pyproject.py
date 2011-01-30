@@ -92,7 +92,7 @@ class _Commands:
            
         print >> sys.stderr, "Syntax: %s <command> [args]" % basename(get_av0())
         if self.cli_wrapper.DESCRIPTION:
-            print self.cli_wrapper.DESCRIPTION
+            print self.cli_wrapper.DESCRIPTION.strip() + "\n"
         print >> sys.stderr, "Commands:"
         def print_command(name):
             command = self.commands.get(name)

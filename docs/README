@@ -1,14 +1,12 @@
-Copyright (c) 2010 TurnKey Linux - all rights reserved
+Copyright (c) 2010-2011 TurnKey Linux - all rights reserved
 
-ABOUT
------
+=== ABOUT
 
 Python turnkey toolkit template, with two example commands
 1) example # dummy example command that parses options
 2) prog # prints 'prog' not implemented
 
-FEATURES
---------
+=== FEATURES
 
 * leverage common infrastructure (pyproject-common):
 pyproject.py Python module for wrapper cli
@@ -63,8 +61,7 @@ project-subcommand --profile args...
 project -d subcommand args...
 project-subcommand --debug args..
 
-USAGE
------
+=== USAGE
 
 * initialization:
 cp -a pyproject newproject

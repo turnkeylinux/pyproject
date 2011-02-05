@@ -2,7 +2,7 @@
 <?xml-stylesheet ekr_test?>
 <leo_file>
 <leo_header file_format="2" tnodes="0" max_tnode_index="50" clone_windows="0"/>
-<globals body_outline_ratio="0.45551982851">
+<globals body_outline_ratio="0.527331189711">
 	<global_window_position top="0" left="570" height="933" width="700"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
@@ -10,8 +10,14 @@
 <find_panel_settings/>
 <vnodes>
 <v t="zaril.20101001195902" a="E"><vh>Project</vh>
+<v t="zaril.20110206013108" a="E"><vh>documentation</vh>
+<v t="zaril.20110206013108.2"><vh>features</vh></v>
+<v t="zaril.20110206013108.3"><vh>usage</vh></v>
+<v t="zaril.20110206013108.4" a="TV"><vh>Makefile extension mechanism</vh></v>
+<v t="zaril.20110206013108.5"><vh>Makefile API</vh></v>
+</v>
 <v t="zaril.20101001200718" a="E"><vh>development log</vh>
-<v t="zaril.20110127054552" a="TV"><vh>modify pyproject to support suid Python scripts</vh></v>
+<v t="zaril.20110127054552"><vh>modify pyproject to support suid Python scripts</vh></v>
 <v t="zaril.20110104133327" a="E"><vh>restructure pyproject to eliminate Makefile duplication</vh>
 <v t="zaril.20110105105904" a="M"><vh>restructured pyproject initialization</vh></v>
 <v t="zaril.20110105102854" a="M"><vh>pyproject-common installation</vh></v>
@@ -34,7 +40,7 @@
 </v>
 </v>
 <v t="zaril.20101001200109.1" a="E"><vh>bugs/wishlist</vh>
-<v t="zaril.20110104133430"><vh>update documentation</vh></v>
+<v t="zaril.20110131202606"><vh>add support for accessing internal libraries</vh></v>
 <v t="zaril.20110104133430.1"><vh>add template support for external libraries</vh></v>
 <v t="zaril.20110105101835"><vh>set maintainer automatically at init?</vh></v>
 <v t="zaril.20110104133327.2"><vh>release v1.0 of pyproject</vh></v>
@@ -135,7 +141,6 @@ Makefile
     </t>
 <t tx="zaril.20110104133327.1"></t>
 <t tx="zaril.20110104133327.2"></t>
-<t tx="zaril.20110104133430"></t>
 <t tx="zaril.20110104133430.1">QUESTION:
     how do I support using programs at the library level?
         I.e., instead of using Sumo through its cli interface, use it directly from modules
@@ -388,5 +393,180 @@ A:
             os.setgroups(usergroups)
             os.setgid(gid)
             os.setuid(uid)</t>
+<t tx="zaril.20110131202606">usage scenario
+    create an instance of a pool, without invoking Python interpreter
+</t>
+<t tx="zaril.20110206013108">Copyright (c) 2010-2011 TurnKey Linux - all rights reserved
+
+Python turnkey toolkit template, with two example commands
+1) example # dummy example command that parses options
+2) prog # prints 'prog' not implemented</t>
+<t tx="zaril.20110206013108.2">* leverage common infrastructure (pyproject-common):
+pyproject.py Python module for wrapper cli
+shared base Makefiles
+shred utility scripts
+
+* integrated help support
+(e.g., command docstrings are automatically interpreted by wrapper)
+
+* sourceless installation target
+all python modules byte compiled with -OO (strips program of docstrings)
+
+the sourceless python program is executed through a binary execution proxy
+        allowing MAC rules to be applied to the toolkit
+        prevents python environment manipulation tricks
+                tricks that could be used to exploit privileged python apps
+        cleans the environment prior to execution in suid mode
+                clears LD_* variables
+                sets PATH, CDPATH, IFS to good values
+
+* debian packaging support
+
+* flexible toolkit execution syntax
+# lists available commands
+project
+
+# runs pylib/cmd_command.py:main()
+project command arg1 arg2 ...
+project-command arg1 arg2 ...
+
+# if only one command available, this will run it
+project arg1 arg2
+
+* wrapper environment setup
+automatically sets up pylib into your python path
+automatically sets up libexec into your PATH
+
+* versioning support
+Looks for version in the following places (by order):
+1) &lt;INSTALL_PATH&gt;/version.txt (if it exists)
+2) debian/changelog (if it exists - parsed with dpkg-parsechangelog)
+3) `autoversion HEAD`
+
+To print out program version:
+        project --version
+
+* integrated profiler support
+project -p subcommand args...
+project-subcommand --profile args...
+
+* integrated debugging support
+project -d subcommand args...
+project-subcommand --debug args..</t>
+<t tx="zaril.20110206013108.3">* initialization:
+cp -a pyproject newproject
+cd newproject &amp;&amp; make init
+
+* update packaging files
+        eg. debian/control with descriptions and dependencies
+
+* remove example dummy commands?
+        pylib/cmd_printargs.py
+        pylib/cmd_prog.py
+
+* add programs to the toolkit as pylib/cmd_&lt;subcmd&gt;.py
+
+* Makefile help usage
+        make || make help
+
+* update links (when you have added or removed commands)
+        make updatelinks
+
+Remember, you can run toolkit commands like this:
+        pylib/cmd_&lt;subcmd&gt;.py arg1 arg2 ...
+        &lt;progname&gt;-&lt;subcmd&gt; arg1 arg2 ...
+        &lt;progname&gt; &lt;subcmd&gt; arg1 arg2 ...
+
+* documentation / integrated help
+Usage:
+&lt;progname&gt; # prints high level overview of programs + help
+&lt;progname&gt;-&lt;command&gt; -h # extended help
+
+Notes:
+- The first line of a cmd_* module docstring is the short usage desc.
+- commands that have a usage() function, support the -h flag for extended help.
+- The help module defines a usage decorator for convenience.
+Example usage (see cmd_printargs for an example):
+
+import help
+@help.usage(__doc__)
+def usage():
+        print "Syntax: foo"
+
+Advanced:
+Normally, the order of the commands printed by &lt;progname&gt; is
+determined by their sort order. If you want to manually tweak with
+the order, then list the desired order in
+wrapper.CliWrapper.COMMANDS_USAGE_ORDER.
+
+Empty string values COMMANDS_USAGE_ORDER symbolize empty lines/seperators.
+
+* install
+make install prefix=...  # prefix defaults to /usr/local
+
+* uninstall
+make uninstall          # prefix defaults to /usr/local
+
+* tag the latest commit as a versioned release:
+
+# this will ask you for a tag message (which may include release notes)
+# and create a tag signed by your GPG key
+git-tag -s v1.0.1
+
+(if available, use of git-tag-release is recommended)</t>
+<t tx="zaril.20110206013108.4">pyproject-common's Makefiles (debian-rules.mk and debian-rules.mk)
+are designed to be configurable and extendable with `define' based hooks
+which are set BEFORE including the shared Makefile because target
+prerequisites are evaluated at include time:
+
+        &lt;target&gt;/pre  # rules before default body (default: empty)
+        &lt;target&gt;/post # rules after default body (default: empty)
+
+        &lt;target&gt;/deps # override default dependencies for a rule
+        &lt;target&gt;/deps/extra # extra dependencies for rule (default: empty)
+
+Special case - if you want to override built in built-in rules for a target,
+you'll need to define them AFTER including the shared Makefile
+        &lt;target&gt;/body # body of rules (default: defined, but can be overridden)
+
+To override built-in variables you'll need to define them AFTER the include.
+
+Most pyprojects don't need to extend the default Makefiles, but
+extending and overriding default behavior is occasionally needed to
+satisfy special use cases (e.g., connagent and opus).
+
+For example:
+
+$ cd opus
+$ cat Makefile
+PATH_INSTALL_TEMPLATES = $(PATH_INSTALL)/templates
+
+define help/post
+        @echo
+        @echo "templates                        # make templates/generated"
+endef
+
+templates:
+        cd templates &amp;&amp; ./generate.py
+
+build/deps/extra = templates
+
+define install/post
+        install -d $(PATH_INSTALL_TEMPLATES)
+        cp -a templates/generated $(PATH_INSTALL_TEMPLATES)
+endef
+
+.PHONY: templates
+
+PYPROJECT_SHARE_PATH ?= /usr/share/pyproject
+include $(PYPROJECT_SHARE_PATH)/pyproject.mk</t>
+<t tx="zaril.20110206013108.5">pyproject.mk:
+        INSTALL_SUID   # if not empty string, install program suid
+        INSTALL_NODOC  # if not empty string, compile without docstrings
+
+        EXTENDABLE_TARGETS = help build install uninstall clean
+
+debian-rules.mk:
+        EXTENDABLE_TARGETS = build clean binary-indep binary-arch</t>
 </tnodes>
 </leo_file>

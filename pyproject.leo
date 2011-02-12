@@ -2,8 +2,8 @@
 <?xml-stylesheet ekr_test?>
 <leo_file>
 <leo_header file_format="2" tnodes="0" max_tnode_index="50" clone_windows="0"/>
-<globals body_outline_ratio="0.527331189711">
-	<global_window_position top="0" left="570" height="933" width="700"/>
+<globals body_outline_ratio="0.181136120043">
+	<global_window_position top="0" left="571" height="933" width="700"/>
 	<global_log_window_position top="0" left="0" height="0" width="0"/>
 </globals>
 <preferences/>
@@ -13,12 +13,12 @@
 <v t="zaril.20110206013108" a="E"><vh>documentation</vh>
 <v t="zaril.20110206013108.2"><vh>features</vh></v>
 <v t="zaril.20110206013108.3"><vh>usage</vh></v>
-<v t="zaril.20110206013108.4" a="TV"><vh>Makefile extension mechanism</vh></v>
+<v t="zaril.20110206013108.4"><vh>Makefile extension mechanism</vh></v>
 <v t="zaril.20110206013108.5"><vh>Makefile API</vh></v>
 </v>
 <v t="zaril.20101001200718" a="E"><vh>development log</vh>
 <v t="zaril.20110127054552"><vh>modify pyproject to support suid Python scripts</vh></v>
-<v t="zaril.20110104133327" a="E"><vh>restructure pyproject to eliminate Makefile duplication</vh>
+<v t="zaril.20110104133327"><vh>restructure pyproject to eliminate Makefile duplication</vh>
 <v t="zaril.20110105105904" a="M"><vh>restructured pyproject initialization</vh></v>
 <v t="zaril.20110105102854" a="M"><vh>pyproject-common installation</vh></v>
 <v t="zaril.20110105105904.1" a="M"><vh>build pyproject-common</vh></v>
@@ -34,13 +34,16 @@
 <v t="zaril.20110105175348" a="M"><vh>refactor pyproject.mk</vh></v>
 <v t="zaril.20110105223455" a="M"><vh>add inheritable hooking mechanism</vh></v>
 <v t="zaril.20110105150435" a="EM"><vh>port all pyprojects</vh></v>
-<v t="zaril.20110106083604" a="EM"><vh>make share/debian-rules.mk extendable</vh>
+<v t="zaril.20110106083604" a="M"><vh>make share/debian-rules.mk extendable</vh>
 <v t="zaril.20110106091356" a="M"><vh>bug: builds twice</vh></v>
 </v>
 </v>
+<v t="zaril.20110131202606" a="ETV"><vh>add support for accessing internal libraries</vh>
+<v t="zaril.20110212001450" a="E"><vh>research pep302 - new import hooks</vh></v>
+<v t="zaril.20110212060512"><vh>empty meta importer test</vh></v>
+</v>
 </v>
 <v t="zaril.20101001200109.1" a="E"><vh>bugs/wishlist</vh>
-<v t="zaril.20110131202606"><vh>add support for accessing internal libraries</vh></v>
 <v t="zaril.20110104133430.1"><vh>add template support for external libraries</vh></v>
 <v t="zaril.20110105101835"><vh>set maintainer automatically at init?</vh></v>
 <v t="zaril.20110104133327.2"><vh>release v1.0 of pyproject</vh></v>
@@ -395,6 +398,50 @@ A:
             os.setuid(uid)</t>
 <t tx="zaril.20110131202606">usage scenario
     create an instance of a pool, without invoking Python interpreter
+
+TEST:
+    from pyproject.opus.comments import strip
+    import pyproject.opus.comments
+
+Q: can we simplify even more?
+A:
+    yes, import can just return a None
+
+pyproject.import('opus')
+
+math_module = __import__('math')
+
+
+GOTCHA: overriding __import__ doesn't effect import
+    TODO: see work
+examples online
+
+* IDEAs: 
+Q: maybe we can define a __getattr__ in the module space?
+A: modules don' have __getattr__,  and __getattribute__ is ignored (its not called)
+
+* LOGIC
+    prefer local installations (as opposed to package installations)
+   
+
+* ROADMAP
++import pyproject.&lt;project&gt;
+    (empty package)
+    looks for /usr/local/lib/&lt;project&gt;/pylib
+              /usr/lib/&lt;project&gt;/pylib
+        raise ImportError exception if none exist
+
+
++import pyproject.&lt;project&gt;.&lt;module&gt;
+-import pyproject.&lt;project&gt;.&lt;package&gt;.&lt;submodule&gt; ...
+    let the future take care of itself
+    not supported by pyproject either
+
+* SCRATCH
+
+imp.load_module can be given any module name
+    even an empty string
+
 </t>
 <t tx="zaril.20110206013108">Copyright (c) 2010-2011 TurnKey Linux - all rights reserved
 
@@ -568,5 +615,97 @@ include $(PYPROJECT_SHARE_PATH)/pyproject.mk</t>
 
 debian-rules.mk:
         EXTENDABLE_TARGETS = build clean binary-indep binary-arch</t>
+<t tx="zaril.20110212001450">* SUMMARY
+multi-level import is broken down into segments
+    spam.eggs
+        first imports spam, then spam.eggs
+
+    by the time spam.eggs is imported spam has already been imported
+
+first tries relative imports, if it fails - absolute import
+    e.g., if spam tries to import eggs if first tries spam.eggs
+
+places to install importers (lists)
+    sys.path_hooks
+        called with each path in sys.path
+            until we find an importer that can handle the path (e.g., zip file)
+
+        add an importer *factory* (e.g., class - with the path)
+            called with path in sys.path
+                must raise ImportError if it can't handle path
+                return importer object if it can
+
+    sys.meta_path
+        add importer objects
+    
+protocol
+    importer.find_module(fullname, path=None)
+        path received if importer is in sys.meta_path
+
+            None for top-level modules
+
+            package.__path__ for submodules/subpackages
+
+        fullname is fully qualified module name
+
+        returns: 
+            loader object if module found
+            None if not
+
+        if an exception is raised - propogated to caller, aborting the import
+
+    loader.load_module(fullname)
+        returns loaded module or raises exception (preferably ImportError)
+        can be same object as importer
+            just return self
+
+        responsibilities (before executing module code)
+            if fullname already exists in sys.modules - use that
+            if it doesn't exist - create module and add it to sys.modules   
+                module = sys.modules.setdefault(fullname, new.module(fullname))
+
+            module must be in sys.modules before loader executes module code
+
+            __file__ attribute must be set (must be a string, can be a dummy value)
+
+            __name__ attribute must be set (done by imp.new_module())
+
+            if its a package, __path__ must be set, must be a list
+
+example load_module:
+    def load_module(self, fullname):
+        ispkg, code = self._get_code(fullname)
+        mod = sys.modules.setdefault(fullname, imp.new_module(fullname))
+        mod.__file__ = "&lt;%s&gt;" % self.__class__.__name__
+        mod.__loader__ = self
+        if ispkg:
+            mod.__path__ = []
+        exec code in mod.__dict__
+        return mod
+
+Integration with imp module
+   
+* QUESTIONS
+---
+Q: is sys's path_hooks, meta_path or object in sys.path documented?
+A: no
+
+E: dummy importers/loaders
+
+* IDEAs:
+install pyproject meta hook imported when pyproject is imported
+    this way import pyproject.opus will work
+
+pyprojects should be packages?
+    we just want access to submodules?
+    don't need to define them as such?
+
+use a meta hook to intercept the call, add path to sys.path and then bail
+    let the regular importer do the real work</t>
+<t tx="zaril.20110212060512">LOGIC
+    import empty.mymodule 
+    mymodule = new.module('mymodule')
+
+    </t>
 </tnodes>
 </leo_file>

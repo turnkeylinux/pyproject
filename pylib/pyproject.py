@@ -7,6 +7,72 @@ import imp
 import getopt
 from executil import getoutput, ExecError
 
+# fool import machinery into treating us like a package
+__path__ = []
+
+class ImportHook:
+    @staticmethod
+    def find_module(fullname, path=None):
+        parts = fullname.split('.')
+        if parts[0] != __name__:
+            return None
+
+        if len(parts) > 1: # pyproject.<project>.<module>
+            return ImportHook
+
+        raise ImportError("importing %s not supported" % fullname)
+
+    @staticmethod
+    def _find_project_path(name):
+        for prefix in ('/usr/local/lib', '/usr/lib'):
+            path = join(prefix, name, 'pylib')
+            if exists(path):
+                return path
+
+        return None
+
+    @staticmethod
+    def _load_pyproject_module(project_path, heirarchy):
+        if len(heirarchy) == 1:
+            package = imp.new_module('')
+            package.__file__ = project_path
+            package.__path__ = [project_path]
+            
+            return package
+
+        module_args = imp.find_module(heirarchy[1], [ project_path ])
+            
+        orig_path = os.getcwd()
+        os.chdir(project_path)
+        try:
+            module = imp.load_module('', *module_args)
+        finally:
+            os.chdir(orig_path)
+
+        return module
+
+    @classmethod
+    def load_module(cls, fullname):
+        if fullname in sys.modules:
+            return sys.modules[fullname]
+        
+        heirarchy = fullname.split('.')
+        assert len(heirarchy) > 1
+
+        project_name = heirarchy[1]
+        project_path = cls._find_project_path(project_name)
+        if not project_path:
+            raise ImportError("no such pyproject (%s)" % project_name)
+
+        module = cls._load_pyproject_module(project_path, heirarchy[1:])
+        module.__name__ = fullname
+        sys.modules[fullname] = module
+
+        return module
+    
+if ImportHook not in sys.meta_path:
+    sys.meta_path.append(ImportHook)
+
 def fatal(e):
     print >> sys.stderr, "fatal: " + str(e)
     sys.exit(1)

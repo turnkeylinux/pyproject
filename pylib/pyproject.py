@@ -40,7 +40,6 @@ class ModuleLoader:
         heirarchy = fullname.split('.')
         assert len(heirarchy) > 1
 
-        project_name = heirarchy[1]
         module = self._load_pyproject_module(heirarchy[1:])
         module.__name__ = fullname
         sys.modules[fullname] = module

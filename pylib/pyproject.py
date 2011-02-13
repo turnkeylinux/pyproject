@@ -14,7 +14,7 @@ class ImportHook:
     @staticmethod
     def find_module(fullname, path=None):
         parts = fullname.split('.')
-        if parts[0] != __name__:
+        if parts[0] != __name__ or not ImportHook._find_project_path(parts[1]):
             return None
 
         if len(parts) > 1: # pyproject.<project>.<module>

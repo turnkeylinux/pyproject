@@ -11,39 +11,29 @@ from executil import getoutput, ExecError
 __path__ = []
 
 class ModuleLoader:
-    def __init__(self, path):
+    def __init__(self, path, module_args):
         self.path = path
+        self.module_args = module_args
         
-    def _load_pyproject_module(self, heirarchy):
-        if len(heirarchy) == 1:
-            package = imp.new_module('')
-            package.__file__ = self.path
-            package.__path__ = [self.path]
-            
-            return package
-
-        module_args = imp.find_module(heirarchy[1], [ self.path ])
-            
-        orig_path = os.getcwd()
-        os.chdir(self.path)
-        try:
-            module = imp.load_module('', *module_args)
-        finally:
-            os.chdir(orig_path)
-
-        return module
-
     def load_module(self, fullname):
         if fullname in sys.modules:
             return sys.modules[fullname]
-        
-        heirarchy = fullname.split('.')
-        assert len(heirarchy) > 1
 
-        module = self._load_pyproject_module(heirarchy[1:])
-        module.__name__ = fullname
+        if self.module_args:
+            orig_path = os.getcwd()
+            os.chdir(self.path)
+            try:
+                module = imp.load_module(fullname, *self.module_args)
+            finally:
+                os.chdir(orig_path)
+        else:
+            # create an empty package
+            # this is a hack needed to resolve heirarchical imports
+            module = imp.new_module(fullname)
+            module.__file__ = self.path
+            module.__path__ = [self.path]
+            
         sys.modules[fullname] = module
-
         return module
     
 class ImportHook:
@@ -62,14 +52,21 @@ class ImportHook:
         if parts[0] != __name__:
             return None
 
+        if len(parts) not in (2,3):
+            return None
+        
         pyproject_path = ImportHook._find_project_path(parts[1])
         if not pyproject_path:
             return None
 
-        if len(parts) > 1: # pyproject.<project>.<module>
-            return ModuleLoader(pyproject_path)
-
-        raise ImportError("importing %s not supported" % fullname)
+        module_args = None
+        if len(parts) > 2:
+            try:
+                module_args = imp.find_module(parts[2], [ pyproject_path ])
+            except ImportError:
+                return None
+            
+        return ModuleLoader(pyproject_path, module_args)
 
 if ImportHook not in sys.meta_path:
     sys.meta_path.append(ImportHook)

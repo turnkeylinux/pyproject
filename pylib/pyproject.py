@@ -39,7 +39,7 @@ class ModuleLoader:
 class ImportHook:
     @staticmethod
     def _find_project_path(name):
-        for prefix in ('/turnkey/projects', '/usr/local/lib', '/usr/lib'):
+        for prefix in ('/turnkey/private', '/usr/local/lib', '/usr/lib'):
             path = join(prefix, name, 'pylib')
             if exists(path):
                 return path

@@ -8,7 +8,8 @@
 #export DH_VERBOSE=1
 
 progname=$(shell awk '/^Source/ {print $$2}' debian/control)
-prefix=debian/$(progname)/usr
+buildroot=debian/$(progname)
+prefix=$(buildroot)/usr
 
 EXTENDABLE_TARGETS = build clean binary-indep binary-arch install
 

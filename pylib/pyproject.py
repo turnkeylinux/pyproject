@@ -249,7 +249,7 @@ class _Commands:
 class CliWrapper:
     DESCRIPTION = ""
     
-    COPYRIGHT = "2009-2011 TurnKey Linux - all rights reserved"
+    COPYRIGHT = "TurnKey Linux - all rights reserved"
 
     # location of our python modules (relative to INSTALL_PATH)
     PATH_LIB = "pylib"

@@ -203,11 +203,12 @@ class _Commands:
                 i += 1
 
         if '-h' in args or '--help' in args:
-            try:
-                command.module.usage()
-            except AttributeError:
+            usage = getattr(command.module, "usage", None)
+            if not usage:
                 print >> sys.stderr, "error: no help for " + name
                 sys.exit(1)
+
+            usage() # doesn't return
 
         return command
         

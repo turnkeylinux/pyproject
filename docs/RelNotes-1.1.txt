@@ -1,0 +1,26 @@
+==================
+v1.1 Release Notes
+==================
+
+* implemented ImportHook magic (allow access to pyproject's pylib modules)
+
+  Usage example::
+  
+      from pyproject.myproject.mymodule import MyClass
+
+  Implementation
+  
+  uses PEP302 import hooks to magically intercept import to pyproject.*
+  importing pyproject installs the hook in sys.meta_path
+
+* significant improvements to the documentation (embedded help, docs/ and leo)
+
+* update default copyrights
+
+* bugfixes
+
+  - rename needs to provide updatelinks with progname
+  - contrib/ will not be installed if it contains folders
+  - standardize whitespace correctly in overview usage
+  - don't handle module names that don't exist as pyprojects
+  - use a more reliable technique to detect cmd_- usage() functions

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2010 TurnKey Linux - all rights reserved
+# Copyright (c) TurnKey Linux - all rights reserved
 """Python project skeleton
 """
 from os.path import *

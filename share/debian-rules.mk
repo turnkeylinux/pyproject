@@ -24,6 +24,9 @@ endef
 install/deps ?= build
 define install/body
 	dh_clean -k
+	dh_testdir
+	dh_installdirs
+	dh_install
 	if [ -d docs ]; then dh_installdocs docs/; fi
 	$(MAKE) install prefix=$(prefix)
 endef

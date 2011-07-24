@@ -20,14 +20,11 @@ init: clean
 ifeq ($(shell basename $(shell pwd)),pyproject)
 	$(error won't initialize pyproject in-place)
 endif
-	rm -f docs/*
-	rm -rf tests share debian pylib setup.py
+	rm -f $$(find -maxdepth 1 -type f)
+	rm -rf $$(find -mindepth 1 -maxdepth 1 -type d | grep -v template)
 
-	cp template/.gitignore ./
-	cp -a template/* ./
-	rm -rf template
-
-	rm -rf .git
+	rsync -a template/ ./
+	rm -rf template/
 
 	$(PYPROJECT_SHARE_PATH)/rename.sh pyproject $(name)
 	git-init 

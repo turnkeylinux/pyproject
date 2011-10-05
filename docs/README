@@ -157,7 +157,7 @@ Usage
 Makefile extension mechanism
 ============================
 
-pyproject-common's Makefiles (debian-rules.mk and debian-rules.mk)
+pyproject-common's Makefiles (pyproject.mk and debian-rules.mk)
 are designed to be configurable and extendable with *define* based hooks
 which are set BEFORE including the shared Makefile because target
 prerequisites are evaluated at include time::

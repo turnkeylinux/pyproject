@@ -18,7 +18,7 @@ PATH_INSTALL_LIBEXEC = $(PATH_INSTALL)/libexec
 PATH_INSTALL_SHARE = $(prefix)/share/$(progname)
 PATH_INSTALL_CONTRIB = $(PATH_INSTALL_SHARE)/contrib
 
-PYTHON_LIB = $(shell echo /usr/lib/python* | sed 's/.* //')
+PYTHON_LIB = $(shell echo /usr/lib/python2* | sed 's/.* //')
 
 PYCC_FLAGS = $(if $(INSTALL_NODOC),-OO,-O)
 PYCC = python $(PYCC_FLAGS) $(PYTHON_LIB)/py_compile.py

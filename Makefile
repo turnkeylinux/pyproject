@@ -32,7 +32,7 @@ endif
 	git-commit -m "Initialized project '$(name)' from pyproject template"
 
 install:
-	python setup.py install -O2 --prefix $(prefix)
+	python setup.py install -O2 --prefix $(prefix) --install-layout=deb
 
 	mkdir -p $(PATH_INSTALL_SHARE)
 	cp -a share/* $(PATH_INSTALL_SHARE)

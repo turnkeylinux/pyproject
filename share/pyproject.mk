@@ -18,11 +18,6 @@ PATH_INSTALL_LIBEXEC = $(PATH_INSTALL)/libexec
 PATH_INSTALL_SHARE = $(prefix)/share/$(progname)
 PATH_INSTALL_CONTRIB = $(PATH_INSTALL_SHARE)/contrib
 
-PYTHON_LIB = $(shell echo /usr/lib/python2* | sed 's/.* //')
-
-PYCC_FLAGS = $(if $(INSTALL_NODOC),-OO,-O)
-PYCC = python $(PYCC_FLAGS) $(PYTHON_LIB)/py_compile.py
-
 PATH_DIST := $(progname)-$(shell date +%F)
 
 # set explicitly to prevent INSTALL_SUID being set in the environment
@@ -64,7 +59,7 @@ updatelinks:
 	@echo
 
 execproxy: execproxy.c
-	gcc execproxy.c -DMODULE_PATH=\"$(call truepath,$(PATH_INSTALL))/wrapper.pyo\" -o _$(progname)
+	gcc execproxy.c -DMODULE_PATH=\"$(call truepath,$(PATH_INSTALL))/wrapper.py\" -o _$(progname)
 	strip _$(progname)
 
 ### Extendable targets
@@ -91,9 +86,6 @@ endef
 
 # target: build
 build/deps ?= execproxy
-define build/body
-	$(PYCC) pylib/*.py *.py
-endef
 
 # target: install
 install/deps ?= build
@@ -110,10 +102,10 @@ define install/body
 		cp -a contrib/* $(PATH_INSTALL_CONTRIB); \
 	fi
 
-	install -m 644 pylib/*.pyo $(PATH_INSTALL_LIB)
+	install -m 644 pylib/*.py $(PATH_INSTALL_LIB)
 	-install -m 755 libexec/* $(PATH_INSTALL_LIBEXEC)
 
-	install -m 644 wrapper.pyo $(PATH_INSTALL)
+	install -m 644 wrapper.py $(PATH_INSTALL)
 	python -O wrapper.py --version > $(PATH_INSTALL)/version.txt
 
 	for f in $(progname)*; do \

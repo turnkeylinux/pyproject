@@ -7,7 +7,7 @@ Standards-Version: 3.6.1
 
 Package: pyproject-common
 Architecture: any
-Depends: debhelper (>> 4.2.0), python (>= 2.4), turnkey-pylib
+Depends: debhelper (>> 4.2.0), python (>= 2.4), turnkey-pylib (>= 0.4)
 Suggests: python-profiler
 Description: Common files for pyproject based projects
 

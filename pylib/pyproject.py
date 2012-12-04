@@ -38,8 +38,30 @@ class ModuleLoader:
     
 class ImportHook:
     @staticmethod
+    def _get_project_paths(conf_file='/etc/pyproject.conf'):
+        default_paths = ['/usr/local/lib', '/usr/lib']
+        paths = []
+
+        if not exists(conf_file):
+            return default_paths
+
+        for line in file(conf_file).readlines():
+            line = line.strip()
+
+            if not line or line.startswith("#"):
+                continue
+
+            op, val = re.split(r'\s+', line, 1)
+            if op == 'project_path':
+                paths.append(val)
+
+        paths.extend(default_paths)
+        return paths
+
+    @staticmethod
     def _find_project_path(name):
-        for prefix in ('/turnkey/private', '/usr/local/lib', '/usr/lib'):
+        project_paths = ImportHook._get_project_paths()
+        for prefix in project_paths:
             path = join(prefix, name, 'pylib')
             if exists(path):
                 return path

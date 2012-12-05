@@ -1,26 +1,9 @@
-Copyright (c) 2009-2011 TurnKey Linux - all rights reserved
+Copyright (c) 2009-2012 TurnKey Linux - http://www.turnkeylinux.org
 
-You are not permitted to use or redistribute this software in any form
-without explicit permission in writing by the copyright holders.
+This file is part of pyproject
 
-You shall acquire no rights of any kind to any copyright, trade
-secret, patent, trademark, trade name, logo, or product designation
-contained in, or relating to, the Software or accompanying
-documentation and shall not make use thereof except as expressly auth
-orized herein or otherwise authorized in writing by the copyright holders.
+pyproject is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3 of the License, or (at your
+option) any later version.
 
-You may not modify, translate, decompile, disassemble, use for any
-competitive analysis, reverse engineer, distribute, or create
-derivative works from, the Software or any accompanying documentation
-or any copy thereof, in whole or in part.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER AND CONTRIBUTORS ``AS IS''
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

@@ -1,3 +1,12 @@
+# Copyright (c) TurnKey Linux - http://www.turnkeylinux.org
+#
+# This file is part of pyproject
+#
+# pyproject is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the
+# Free Software Foundation; either version 3 of the License, or (at your
+# option) any later version.
+
 _self = $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 PYPROJECT_SHARE_PATH ?= $(shell dirname $(_self))
 

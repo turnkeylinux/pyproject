@@ -1,7 +1,7 @@
 About
 =====
 
-Python turnkey toolkit template, with two example commands:
+TurnKey Linux Python toolkit template, with two example commands:
 
 1) example # dummy example command that parses options
 2) prog # prints 'prog' not implemented
@@ -17,22 +17,6 @@ Features
 
 * integrated help support
   (e.g., command docstrings are automatically interpreted by wrapper)
-
-* sourceless installation target
-
-  all python modules byte compiled with -OO (strips program of docstrings)
-  
-  the sourceless python program is executed through a binary execution proxy
-  
-      - allowing MAC rules to be applied to the toolkit
-      - prevents python environment manipulation tricks
-  
-          - tricks that could be used to exploit privileged python apps
-  
-      - cleans the environment prior to execution in suid mode
-  
-          - clears LD_* variables
-          - sets PATH, CDPATH, IFS to good values
 
 * debian packaging support
 

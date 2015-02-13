@@ -23,7 +23,7 @@ class ModuleLoader:
     def __init__(self, path, module_args):
         self.path = path
         self.module_args = module_args
-        
+
     def load_module(self, fullname):
         if fullname in sys.modules:
             return sys.modules[fullname]
@@ -41,10 +41,10 @@ class ModuleLoader:
             module = imp.new_module(fullname)
             module.__file__ = self.path
             module.__path__ = [self.path]
-            
+
         sys.modules[fullname] = module
         return module
-    
+
 class ImportHook:
     @staticmethod
     def _get_project_paths(conf_file='/etc/pyproject.conf'):
@@ -76,7 +76,7 @@ class ImportHook:
                 return path
 
         return None
-    
+
     @staticmethod
     def find_module(fullname, path=None):
         parts = fullname.split('.')
@@ -85,7 +85,7 @@ class ImportHook:
 
         if len(parts) not in (2,3):
             return None
-        
+
         pyproject_path = ImportHook._find_project_path(parts[1])
         if not pyproject_path:
             return None
@@ -96,7 +96,7 @@ class ImportHook:
                 module_args = imp.find_module(parts[2], [ pyproject_path ])
             except ImportError:
                 return None
-            
+
         return ModuleLoader(pyproject_path, module_args)
 
 if ImportHook not in sys.meta_path:
@@ -105,7 +105,7 @@ if ImportHook not in sys.meta_path:
 def fatal(e):
     print >> sys.stderr, "fatal: " + str(e)
     sys.exit(1)
-    
+
 # this function is designed to work when running in-place source
 # and when running code through a pycompiled installation with execproxy
 def get_av0():
@@ -116,7 +116,7 @@ def get_av0():
             av0 = args[1]
         else:
             av0 = args[0]
-                    
+
     except IOError:
         av0 = sys.argv[0]
 
@@ -125,19 +125,19 @@ def get_av0():
 class _Commands:
     class Error(Exception):
         pass
-    
+
     class Command:
         def __init__(self, name, module):
             self.name = name
             self.module = module
             self.desc = ""
             self.doc = ""
-            
+
             doc = module.__doc__
             if doc:
                 self.doc = doc.strip()
                 self.desc = self.doc.split('\n')[0]
-            
+
     def _find_commands(self):
         commands = set()
         for file in os.listdir(self.path):
@@ -184,7 +184,7 @@ class _Commands:
         print >> sys.stderr, self.cli_wrapper.get_copyright()
         if error:
             print >> sys.stderr, "error: " + str(error)
-           
+
         print >> sys.stderr, "Syntax: %s <command> [args]" % basename(get_av0())
         if self.cli_wrapper.DESCRIPTION:
             print self.cli_wrapper.DESCRIPTION.strip() + "\n"
@@ -206,7 +206,7 @@ class _Commands:
         command_names.sort()
         for name in command_names:
             print_command(name)
-            
+
         sys.exit(1)
 
     def get(self, name):
@@ -242,7 +242,7 @@ class _Commands:
             usage() # doesn't return
 
         return command
-        
+
     def run(self, name, args):
         command = self._pre_run(name, args)
 
@@ -272,16 +272,16 @@ class _Commands:
         statsfile = tempfile.mkstemp(".prof")[1]
         profile.runctx('command.module.main()', globals(), locals(), statsfile)
         pstats.Stats(statsfile).strip_dirs().sort_stats('cumulative').print_stats()
-        
+
         os.remove(statsfile)
-        
+
     def __len__(self):
         return len(self.commands)
-    
+
 class CliWrapper:
     DESCRIPTION = ""
-    
-    COPYRIGHT = "TurnKey Linux - http://www.turnkeylinux.org"
+
+    COPYRIGHT = "TurnKey GNU/Linux - http://www.turnkeylinux.org"
 
     # location of our python modules (relative to INSTALL_PATH)
     PATH_LIB = "pylib"
@@ -293,7 +293,7 @@ class CliWrapper:
     # are printed in Commands.usage().
     #
     # "" prints an newline in the usage order
-    
+
     COMMANDS_USAGE_ORDER = []
 
     @classmethod
@@ -305,7 +305,7 @@ class CliWrapper:
         2) debian/changelog (if it exists - parsed with dpkg-parsechangelog)
         3) `autoversion HEAD`
         """
-        
+
         version_file = join(cls.INSTALL_PATH, "version.txt")
 
         if lexists(version_file):
@@ -315,7 +315,7 @@ class CliWrapper:
 
         if cls.INSTALL_PATH:
             os.chdir(cls.INSTALL_PATH)
-            
+
         try:
             if not exists("debian/changelog"):
                 output = getoutput("autoversion HEAD")

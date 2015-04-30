@@ -18,14 +18,14 @@ fi
 
 for oldlink in $(find -maxdepth 1 -type l); do
     if [ "$git" == "true" ]; then
-	git-rm $oldlink >& /dev/null || true
+	git rm $oldlink >& /dev/null || true
     fi
     rm -f $oldlink
 done
 
 ln -s wrapper.py $progname
 if [ "$git" == "true" ]; then
-    git-add $progname
+    git add $progname
 fi
 
 cmd_modules=(pylib/cmd_*.py)
@@ -36,7 +36,7 @@ if [ ${#cmd_modules[*]} -gt 1 ]; then
 	
 	ln -s $progname $newlink
 	if [ "$git" == "true" ]; then
-	    git-add $newlink
+	    git add $newlink
 	fi
     done
 fi

@@ -134,7 +134,7 @@ Usage
 
   # this will ask you for a tag message (which may include release notes)
   # and create a tag signed by your GPG key
-  git-tag -s v1.0.1
+  git tag -s v1.0.1
   
   (if available, use of git-tag-release is recommended)
 

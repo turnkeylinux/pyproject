@@ -52,7 +52,7 @@ dist: clean
 gitdist: clean
 	-mkdir -p $(PATH_DIST)-git
 	-cp -a .git $(PATH_DIST)-git
-	cd $(PATH_DIST)-git && git-repack -a -d
+	cd $(PATH_DIST)-git && git repack -a -d
 
 	tar jcvf $(PATH_DIST)-git.tar.bz2 $(PATH_DIST)-git
 	rm -rf $(PATH_DIST)-git

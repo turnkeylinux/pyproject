@@ -27,9 +27,9 @@ endif
 	rm -rf template/
 
 	$(PYPROJECT_SHARE_PATH)/rename.sh pyproject $(name)
-	git-init 
-	git-add .
-	git-commit -m "Initialized project '$(name)' from pyproject template"
+	git init 
+	git add .
+	git commit -m "Initialized project '$(name)' from pyproject template"
 
 install:
 	python setup.py install --prefix $(prefix) --install-layout=deb

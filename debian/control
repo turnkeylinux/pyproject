@@ -11,7 +11,6 @@ Package: pyproject-common
 Architecture: any
 Depends:
  ${misc:Depends},
- debhelper (>> 4.2.0),
  python (>= 2.4),
  turnkey-pylib (>= 0.4),
 Suggests:

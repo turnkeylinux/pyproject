@@ -1,4 +1,9 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/pkg-info.mk
+
 %:
-	dh $@ --with python2 --buildsystem=pybuild
+	dh $@ --with python2 --buildsystem=makefile
+
+override_dh_auto_install:
+	dh_auto_install -- prefix=$(CURDIR)/debian/$(DEB_SOURCE)/usr

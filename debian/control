@@ -2,7 +2,7 @@ Source: pyproject-common
 Section: misc
 Priority: optional
 Maintainer: Liraz Siri <liraz@turnkeylinux.org>
-Build-Depends: debhelper (>> 4.2.0), python (>= 2.4)
+Build-Depends: debhelper (>= 10), python (>= 2.4)
 Standards-Version: 4.0.0
 
 Package: pyproject-common

@@ -6,4 +6,4 @@ include /usr/share/dpkg/pkg-info.mk
 	dh $@ --with python2 --buildsystem=makefile
 
 override_dh_auto_install:
-	dh_auto_install -- prefix=$(CURDIR)/debian/$(DEB_SOURCE)/usr
+	dh_auto_install -- prefix=debian/$(DEB_SOURCE)/usr

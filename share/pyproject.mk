@@ -130,6 +130,8 @@ define install/body
 	done
 	rm -f $(PATH_BIN)/$(progname)
 	install -m $(INSTALL_FILE_MOD) _$(progname) $(PATH_BIN)/$(progname)
+
+	find $(PATH_INSTALL) -type d -empty -delete
 endef
 
 # target: uninstall

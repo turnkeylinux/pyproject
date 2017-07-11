@@ -68,7 +68,7 @@ updatelinks:
 	@echo
 
 execproxy: execproxy.c
-	gcc execproxy.c -DMODULE_PATH=\"$(call truepath,$(PATH_INSTALL))/wrapper.py\" -o _$(progname)
+	$(CC) execproxy.c -DMODULE_PATH=\"$(call truepath,$(PATH_INSTALL))/wrapper.py\" -o _$(progname)
 	strip _$(progname)
 
 ### Extendable targets
